@@ -1,1 +1,7 @@
 Right now, everything is running on Cloudera VM.
+
+Steps to get working:
+sudo apt-get install python-numpy
+sudo apt-get install python-tables
+python ./display_song.py -summary msd_summary_file.h5
+
