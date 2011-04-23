@@ -9,23 +9,24 @@ import re
 # if track record
 # track ID: date
 def map(line):
-	# we have to see what input line we have
-	if (line[0]=="%"): # start of new record
-		line_split=re.split("\t",line)
-		coversong_match=re.match("%(\d*),",line_split[0])
-		if(coversong_match):
-			coversong_id=coversong_match.group(0)
-			for i in range(1,len(line_split):
-				track_match=re.match("([A-Z0-9]*)<SEP>([A-Z0-9]*)",line_split[i])
-				if(track_match):
-					track_id=track_match.group(0)
-					artist_id=track_match.group(1)
-					yield(track_id,coversong_id+","+artist_id)
-	else: # track record
-		line_split=re.split("<SEP>",line)
-		track_date=line_split[0]
-		track_id=line_split[1]
-		yield(track_id,track_date)
+	if(line):
+		# we have to see what input line we have
+		if (line[0]=="%"): # start of new record
+			line_split=re.split("\t",line)
+			coversong_match=re.match("%(\d*),",line_split[0])
+			if(coversong_match):
+				coversong_id=coversong_match.group(0)
+				for i in range(1,len(line_split)):
+					track_match=re.match("([A-Z0-9]*)<SEP>([A-Z0-9]*)",line_split[i])
+					if(track_match):
+						track_id=track_match.group(0)
+						artist_id=track_match.group(1)
+						yield(track_id,coversong_id+","+artist_id)
+		else: # track record
+			line_split=re.split("<SEP>",line)
+			track_date=line_split[0]
+			track_id=line_split[1]
+			yield(track_id,track_date)
 
 # reducer outputs
 # track ID: cover song ID, artist ID, date
