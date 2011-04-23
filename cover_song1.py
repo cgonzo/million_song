@@ -32,18 +32,17 @@ def map(line):
 # track ID: cover song ID, artist ID, date
 def reduce(word, counts):
 	# we should have one cover song and one track ID record per song
-	if(len(counts)!=2):
-		pass
-	track_id=word
-	for count in counts:
-		count_split=re.split(",",count)
-		if(count_split[1]):
-			# cover song record
-			coversong_id=count_split[0]
-			artist_id=count_split[1]
-		else:
-			track_date=count_split[0]
-	yield(track_id,cover_song_id+artist_id+track_date)
+	if(len(counts)==2):
+		track_id=word
+		for count in counts:
+			count_split=re.split(",",count)
+			if(len(count_split)>1):
+				# cover song record
+				cover_song_id=count_split[0]
+				artist_id=count_split[1]
+			else:
+				track_date=count
+		yield(track_id,cover_song_id+","+artist_id+","+track_date)
 
 if __name__ == "__main__":
   common.main(map, reduce)
