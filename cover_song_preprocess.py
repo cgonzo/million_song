@@ -10,7 +10,7 @@ for line in sys.stdin:
 	stripped_line=line.rstrip()
 	# each record starts with %
 	if(stripped_line[0]=='%'):
-		print old_line+'\n'
+		print old_line
 		old_line=stripped_line
 	# exclude comments starting with #
 	elif(stripped_line[0]!='#'):
