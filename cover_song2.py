@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import common
+import re
 
 # mapper 
 # input
@@ -31,9 +32,9 @@ def reduce(word, counts):
 		if(len(count_split)==2):
 			artist_id[i]=count_split[0]
 			date[i]=count_split[1]
-			if(date<date[oldest_date_index])
+			if(date[i]<date[oldest_date_index]):
 				oldest_date_index=i
-	for artist in artist_id
+	for artist in artist_id:
 		if(artist != artist_id[oldest_date_index]):
 			yield(artist,artist_id[oldest_date_index])
 
