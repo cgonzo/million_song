@@ -9,8 +9,10 @@ def map(line):
 	h5 = hdf5_getters.open_h5_file_read(line)
 	if(h5):
 		tempo=hdf5_getters.get_tempo(h5,0)
+		track_id=hdf5_getters.get_title(h5,0)
 		if tempo>0.1:	# if tempo is unknown, set as 0
-			yield("1",str(tempo))
+			tempo_string="%07.3f" %tempo
+			yield(tempo_string,track_id)
 		h5.close()
 
 def reduce(word, counts):
