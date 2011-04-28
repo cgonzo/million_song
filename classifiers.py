@@ -11,6 +11,9 @@ def map(line):
 	h5 = hdf5_getters.open_h5_file_read(line)
 	if(h5):
 		output_array=[]
+		# duration
+		duration=hdf5_getters.get_duration(h5)
+		output_array.append(duration)	### ADDED VALUE TO ARRAY
 		# number of bars
 		bars=hdf5_getters.get_bars_start(h5)
 		num_bars=len(bars)
@@ -19,11 +22,7 @@ def map(line):
 		bar_length=[]
 		for i in range(1,len(bars)):
 			bar_length.append(bars[i]-bars[i-1])
-		if len(bar_length)>0:
-			mean_bar_length=sum(bar_length)/len(bar_length)
-		else:
-			mean_bar_length=0
-		output_array.append(mean_bar_length)	### ADDED VALUE TO ARRAY
+		mean_bar_length=num_bars/duration
 		variance_bar_length=0
 		for bar_length_element in bar_length:
 			variance_bar_length+=(bar_length_element-mean_bar_length)**2
@@ -40,11 +39,7 @@ def map(line):
 		beats_length=[]
 		for i in range(1,len(beats)):
 			beats_length.append(beats[i]-beats[i-1])
-		if len(beats_length)>0:
-			mean_beats_length=sum(beats_length)/len(beats_length)
-		else:
-			mean_beats_length=0
-		output_array.append(mean_beats_length)	### ADDED VALUE TO ARRAY
+		mean_beats_length=num_beats/duration
 		variance_beats_length=0
 		for beats_length_element in beats_length:
 			variance_beats_length+=(beats_length_element-mean_beats_length)**2
@@ -56,9 +51,6 @@ def map(line):
 		# danceability
 		danceability=hdf5_getters.get_danceability(h5)
 		output_array.append(danceability)	### ADDED VALUE TO ARRAY
-		# duration
-		duration=hdf5_getters.get_duration(h5)
-		output_array.append(duration)	### ADDED VALUE TO ARRAY
 		# end of fade in
 		end_of_fade_in=hdf5_getters.get_end_of_fade_in(h5)
 		output_array.append(end_of_fade_in)	### ADDED VALUE TO ARRAY
@@ -82,11 +74,7 @@ def map(line):
 		sections_length=[]
 		for i in range(1,len(sections)):
 			sections_length.append(sections[i]-sections[i-1])
-		if len(sections_length)>0:
-			mean_sections_length=sum(sections_length)/len(sections_length)
-		else:
-			mean_sections_length=0
-		output_array.append(mean_sections_length)	### ADDED VALUE TO ARRAY
+		mean_sections_length=num_sections/duration
 		variance_sections_length=0
 		for sections_length_element in sections_length:
 			variance_sections_length+=(sections_length_element-mean_sections_length)**2
@@ -103,11 +91,7 @@ def map(line):
 		segments_length=[]
 		for i in range(1,len(segments)):
 			segments_length.append(segments[i]-segments[i-1])
-		if len(segments_length)>0:
-			mean_segments_length=sum(segments_length)/len(segments_length)
-		else:
-			mean_segments_length=0
-		output_array.append(mean_segments_length)	### ADDED VALUE TO ARRAY
+		mean_segments_length=num_segments/duration
 		variance_segments_length=0
 		for segments_length_element in segments_length:
 			variance_segments_length+=(segments_length_element-mean_segments_length)**2
@@ -186,11 +170,7 @@ def map(line):
 		tatums_length=[]
 		for i in range(1,len(tatums)):
 			tatums_length.append(tatums[i]-tatums[i-1])
-		if len(tatums_length)>0:
-			mean_tatums_length=sum(tatums_length)/len(tatums_length)
-		else:
-			mean_tatums_length=0
-		output_array.append(mean_tatums_length)	### ADDED VALUE TO ARRAY
+		mean_tatums_length=num_tatums/duration
 		variance_tatums_length=0
 		for tatums_length_element in tatums_length:
 			variance_tatums_length+=(tatums_length_element-mean_tatums_length)**2
@@ -222,6 +202,7 @@ def map(line):
 			else:
 				yield("!"+stripped_line,json.dumps(output_array))
 		f.close()
+		h5.close()
 		
 
 def reduce(word, counts):
