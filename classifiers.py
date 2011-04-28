@@ -174,7 +174,7 @@ def map(line):
 		variance_tatums_length=0
 		for tatums_length_element in tatums_length:
 			variance_tatums_length+=(tatums_length_element-mean_tatums_length)**2
-		if tatums_length>0:
+		if len(tatums_length)>0:
 			variance_tatums_length/=len(tatums_length)
 		else:
 			variance_tatums_length=0
