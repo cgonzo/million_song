@@ -19,12 +19,18 @@ def map(line):
 		bar_length=[]
 		for i in range(1,len(bars)):
 			bar_length.append(bars[i]-bars[i-1])
-		mean_bar_length=sum(bar_length)/len(bar_length)
+		if len(bar_length)>0:
+			mean_bar_length=sum(bar_length)/len(bar_length)
+		else:
+			mean_bar_length=0
 		output_array.append(mean_bar_length)	### ADDED VALUE TO ARRAY
 		variance_bar_length=0
 		for bar_length_element in bar_length:
 			variance_bar_length+=(bar_length_element-mean_bar_length)**2
-		variance_bar_length/=len(bar_length)
+		if len(bar_length)>0:
+			variance_bar_length/=len(bar_length)
+		else:
+			variance_bar_length=0
 		output_array.append(variance_bar_length)	### ADDED VALUE TO ARRAY
 		# number of beats
 		beats=hdf5_getters.get_beats_start(h5)
@@ -34,12 +40,18 @@ def map(line):
 		beats_length=[]
 		for i in range(1,len(beats)):
 			beats_length.append(beats[i]-beats[i-1])
-		mean_beats_length=sum(beats_length)/len(beats_length)
+		if len(beats_length)>0:
+			mean_beats_length=sum(beats_length)/len(beats_length)
+		else:
+			mean_beats_length=0
 		output_array.append(mean_beats_length)	### ADDED VALUE TO ARRAY
 		variance_beats_length=0
 		for beats_length_element in beats_length:
 			variance_beats_length+=(beats_length_element-mean_beats_length)**2
-		variance_beats_length/=len(beats_length)
+		if len(beats_length)>0:
+			variance_beats_length/=len(beats_length)
+		else:
+			variance_beats_length=0
 		output_array.append(variance_beats_length)	### ADDED VALUE TO ARRAY
 		# danceability
 		danceability=hdf5_getters.get_danceability(h5)
@@ -70,12 +82,18 @@ def map(line):
 		sections_length=[]
 		for i in range(1,len(sections)):
 			sections_length.append(sections[i]-sections[i-1])
-		mean_sections_length=sum(sections_length)/len(sections_length)
+		if len(sections_length)>0:
+			mean_sections_length=sum(sections_length)/len(sections_length)
+		else:
+			mean_sections_length=0
 		output_array.append(mean_sections_length)	### ADDED VALUE TO ARRAY
 		variance_sections_length=0
 		for sections_length_element in sections_length:
 			variance_sections_length+=(sections_length_element-mean_sections_length)**2
-		variance_sections_length/=len(sections_length)
+		if len(sections_length)>0:
+			variance_sections_length/=len(sections_length)
+		else:
+			variance_sections_length=0
 		output_array.append(variance_sections_length)	### ADDED VALUE TO ARRAY
 		# number segments
 		segments=hdf5_getters.get_segments_start(h5)
@@ -85,12 +103,18 @@ def map(line):
 		segments_length=[]
 		for i in range(1,len(segments)):
 			segments_length.append(segments[i]-segments[i-1])
-		mean_segments_length=sum(segments_length)/len(segments_length)
+		if len(segments_length)>0:
+			mean_segments_length=sum(segments_length)/len(segments_length)
+		else:
+			mean_segments_length=0
 		output_array.append(mean_segments_length)	### ADDED VALUE TO ARRAY
 		variance_segments_length=0
 		for segments_length_element in segments_length:
 			variance_segments_length+=(segments_length_element-mean_segments_length)**2
-		variance_segments_length/=len(segments_length)
+		if len(segments_length)>0:
+			variance_segments_length/=len(segments_length)
+		else:
+			variance_segments_length=0
 		output_array.append(variance_segments_length)	### ADDED VALUE TO ARRAY
 		# segment loudness max
 		segment_loudness_max_array=hdf5_getters.get_segments_loudness_max(h5)
@@ -162,12 +186,18 @@ def map(line):
 		tatums_length=[]
 		for i in range(1,len(tatums)):
 			tatums_length.append(tatums[i]-tatums[i-1])
-		mean_tatums_length=sum(tatums_length)/len(tatums_length)
+		if len(tatums_length)>0:
+			mean_tatums_length=sum(tatums_length)/len(tatums_length)
+		else:
+			mean_tatums_length=0
 		output_array.append(mean_tatums_length)	### ADDED VALUE TO ARRAY
 		variance_tatums_length=0
 		for tatums_length_element in tatums_length:
 			variance_tatums_length+=(tatums_length_element-mean_tatums_length)**2
-		variance_tatums_length/=len(tatums_length)
+		if tatums_length>0:
+			variance_tatums_length/=len(tatums_length)
+		else:
+			variance_tatums_length=0
 		output_array.append(variance_tatums_length)	### ADDED VALUE TO ARRAY
 		# tempo
 		tempo=hdf5_getters.get_tempo(h5)
@@ -191,6 +221,7 @@ def map(line):
 				yield(stripped_line,json.dumps(output_array))
 			else:
 				yield("!"+stripped_line,json.dumps(output_array))
+		f.close()
 		
 
 def reduce(word, counts):
