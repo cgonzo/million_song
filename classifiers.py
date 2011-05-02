@@ -5,6 +5,7 @@ import common
 import hdf5_getters
 import json
 import sys
+import re
 
 # input: file name
 # output: artist_id artist_name
@@ -21,35 +22,32 @@ def map(line):
 				if (term==stripped_line):
 					match=1
 			if match==1:
-				yield(stripped_line,json.dumps(output_array))
+				for i in range(len(output_array)):
+					yield(stripped_line+","+str(i),str(output_array[i]))
 			else:
-				yield("!"+stripped_line,json.dumps(output_array))
+				for i in range(len(output_array)):
+					yield("!"+stripped_line+","+str(i),str(output_array[i]))
 		f.close()
 		h5.close()
 		
 
 def reduce(word, counts):
+	# find out what category and stat we're on
+	split_word=re.split(",",word)
+	category=split_word[0]
+	classifier_number=split_word[1]
 	# zero out arrays
-	mean=[]
-	variance=[]
-	for iterator in json.loads(counts[0]):
-		mean.append(0)
-		variance.append(0)
+	mean=0
+	variance=0
 	# find mean of all terms
 	for count in counts:
-		song_data=json.loads(count)
-		for i in range(len(song_data)):
-			mean[i]+=song_data[i]
-	for i in range(len(mean)):
-		mean[i]/=len(counts)
+		mean+=float(count)
+	mean/=len(counts)
 	# find variance of all terms
 	for count in counts:
-		song_data=json.loads(count)
-		for i in range(len(song_data)):
-			variance[i]+=(song_data[i]-mean[i])**2
-	for i in range(len(mean)):
-		variance[i]/=len(counts)
-	yield(word,json.dumps([len(counts),mean,variance]))
+		variance+=(float(count)-mean)**2
+	variance/=len(counts)
+	yield(classifier_number,category+","+str(len(counts))+","+str(mean)+","+str(variance))
 	
 	
 
