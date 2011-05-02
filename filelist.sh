@@ -1,1 +1,1 @@
-find $PWD/MillionSongSubset/data/ -name T*.h5 -fprint filelist.txt
+find /mnt/data/data/ -name T*.h5 -fprint filelist.txt
