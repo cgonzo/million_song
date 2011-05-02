@@ -1,7 +1,16 @@
 Right now, everything is running on Cloudera VM.
 
-Steps to get working:
+Steps to get working on Cloudera VM:
 sudo apt-get install python-numpy
 sudo apt-get install python-tables
 python ./display_song.py -summary msd_summary_file.h5
+
+Steps to get working on Starcluster AMI:
+install hdf5
+apt-get remove cython
+install cython
+install numexpr
+export HDF5_DIR
+export LD_LIBRARY_PATH
+install pytables
 
