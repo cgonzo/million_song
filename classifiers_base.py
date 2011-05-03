@@ -115,5 +115,8 @@ def classify(h5):
 	# year
 	year=hdf5_getters.get_year(h5)
 	output_array["year"]=year	### ADDED VALUE TO ARRAY
+	# artist terms
+	artist_terms=hdf5_getters.get_artist_terms(h5,0)
+	output_array["artist_terms"]=artist_terms.tolist()
 
 	return output_array

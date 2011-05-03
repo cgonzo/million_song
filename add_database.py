@@ -13,11 +13,6 @@ def map(line):
 	h5 = hdf5_getters.open_h5_file_read(line)
 	if(h5):
 		output_array=classifiers_base.classify(h5)
-		artist_terms=hdf5_getters.get_artist_terms(h5,0)
-		artist_terms_list=[]
-		for term in artist_terms:
-			artist_terms_list.append(term)
-		output_array.append(artist_terms_list)
 		yield(str(hdf5_getters.get_track_id(h5,0)),json.dumps(output_array))
 		h5.close()
 		
