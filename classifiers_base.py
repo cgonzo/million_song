@@ -10,7 +10,7 @@ def classify(h5):
 	# number of bars
 	bars=hdf5_getters.get_bars_start(h5)
 	num_bars=len(bars)
-	output_array["num_bars"]=num_bars)	### ADDED VALUE TO ARRAY
+	output_array["num_bars"]=num_bars	### ADDED VALUE TO ARRAY
 	# mean and variance in bar length
 	bar_length=numpy.ediff1d(bars)
 	variance_bar_length=numpy.var(bar_length)
@@ -21,7 +21,7 @@ def classify(h5):
 	output_array["num_beats"]=num_beats	### ADDED VALUE TO ARRAY
 	# mean and variance in beats length
 	beats_length=numpy.ediff1d(beats)
-	variance_beats_length=var(bar_length)
+	variance_beats_length=numpy.var(bar_length)
 	output_array["variance_beats_length"]=variance_beats_length	### ADDED VALUE TO ARRAY
 	# danceability
 	danceability=hdf5_getters.get_danceability(h5)
