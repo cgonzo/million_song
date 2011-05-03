@@ -118,5 +118,9 @@ def classify(h5):
 	# artist terms
 	artist_terms=hdf5_getters.get_artist_terms(h5,0)
 	output_array["artist_terms"]=artist_terms.tolist()
+	artist_terms_freq=hdf5_getters.get_artist_terms_freq(h5,0)
+	output_array["artist_terms_freq"]=artist_terms_freq.tolist()
+	artist_name=hdf5_getters.get_artist_name(h5,0)
+	output_array["artist_name"]=artist_name
 
 	return output_array
