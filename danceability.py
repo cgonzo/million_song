@@ -1,25 +1,28 @@
 #!/usr/bin/python
 
 import common
-import hdf5_getters
+import json
 import re
 
 # input: file name
 # output: artist_id artist_name
 def map(line):
-	h5 = hdf5_getters.open_h5_file_read(line)
-	if(h5):
-		danceability=hdf5_getters.get_danceability(h5,0)
-		if(danceability>0):
-			artist_name=hdf5_getters.get_artist_name(h5,0)
-			yield(artist_name,str(danceability))
-		h5.close()
+	line_split=re.split("\t",line)
+	track_id=line_split[0]
+	track_data=json.loads(line_split[1])
+	danceability=track_data["danceability"]
+	artist_name=track_data["artist_name"]
+	yield(artist_name,str(danceability))
 
 def reduce(word, counts):
 	average_danceability=0.0
+	num_danceable_songs=0
 	for count in counts:
-		average_danceability+=float(counts)
-	average_danceability/=len(counts)
+		if float(count)>0:
+			average_danceability+=float(count)
+			num_danceable_songs+=1
+	if num_danceable_songs>0:
+		average_danceability/=num_danceable_songs
 	average_danceability_string="%010.10f"%average_danceability
 	yield(average_danceability_string,word)
 
