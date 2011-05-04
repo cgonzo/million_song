@@ -6,6 +6,7 @@ import hdf5_getters
 import json
 import sys
 import re
+import gc
 
 # input: file name
 # output: artist_id artist_name
@@ -15,7 +16,8 @@ def map(line):
 		output_array=classifiers_base.classify(h5)
 		yield(str(hdf5_getters.get_track_id(h5,0)),json.dumps(output_array))
 		h5.close()
-		
+		del output_array
+		gc.collect()		
 
 def reduce(word, counts):
 	pass
