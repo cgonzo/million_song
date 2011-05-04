@@ -1,55 +1,83 @@
 #!/usr/bin/python
 
-import classifiers_base
 import common
-import hdf5_getters
 import json
 import sys
 import re
 
-# input: file name
-# output: artist_id artist_name
+# input: songs (possibly to classify)
+# output: categories, category_prediction_percentage
 def map(line):
+	# create dictionary of test artists
+	artist_dict={}
+	f = open("artists_train.txt",'r')
+	for artist in f:
+		artist_dict[artist]=1
+	f.close()
+	classifier={}
+	f = open("build_bayes/part-00000",'r')
+	for classifier_line in f:
+		classifier_line_split=re.split("\t",classifier_line)
+		classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
 	line_split=re.split("\t",line)
-	# are we dealing with classifier record?
-	if(len(line_split)==2):
-		pass(line_split[0],line_split[1])
-	else:
-		h5 = hdf5_getters.open_h5_file_read(line)
-		if(h5):
-			output_array=classifiers_base.classify(h5)
-			# output array
-			track_id=hdf5_getters.get_track_id(h5,0)
-			artist_terms=hdf5_getters.get_artist_terms(h5,0)
-			for i in range(len(output_array)):
-				yield(str(i),track_id+","+str(output_array[i])+","+json.dumps(artist_terms))
-			h5.close()
+	track_id=line_split[0]
+	track_data=json.loads(line_split[1])
+	artist_id=track_data["artist_id"]
+	if(artist_dict[artist_id]!=1):	# if we're not in train, we're in test
+		# find the actual term we're looking for
+		artist_terms=track_data["artist_terms"]
+		if len(terms)>0:
+			term_frequencies=track_data["artist_terms_freq"]
+			top_term=0
+			for i in range(len(terms)):
+				if(term_frequencies[i]>term_frequencies[top_term]):
+					top_term=i
+			actual_term=artist_terms[i]
+			# calculate the probabilities for each term, find top
+			top_probability_term=actual_term # initialize top term
+			top_probability=0
+			for classifier_term,classifier_data in classifier.items():
+				probabilities=[]
+				count=classifier_data[0]
+				means=classifier_data[1]
+				variances=classifier_data[2]
+				for data_label in means.keys:
+					track_value=track_data[data_label]
+					mean=means[data_label]
+					stdev=sqrt(variances[data_label])
+					probability=count/1000000*(1/(stdev*2*pi()))*exp(-(track_value-mean)**2/(2*stdev))
+					probabilities.append(probability)
+				term_probability=numpy.prod(array(probabilities))
+				if term_probability>top_probability:
+					top_probability=term_probability
+					top_probability_term=classifier_term
+			yield("1",actual_term+","+top_probability)
 		
-
+# output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
-	# zero out arrays
-	mean=[]
-	variance=[]
-	for iterator in json.loads(counts[0]):
-		mean.append(0)
-		variance.append(0)
-	# find mean of all terms
+	false_positives={}
+	false_negatives={}
+	correct={}
+	terms={}
 	for count in counts:
-		song_data=json.loads(count)
-		for i in range(len(song_data)):
-			mean[i]+=song_data[i]
-	for i in range(len(mean)):
-		mean[i]/=len(counts)
-	# find variance of all terms
-	for count in counts:
-		song_data=json.loads(count)
-		for i in range(len(song_data)):
-			variance[i]+=(song_data[i]-mean[i])**2
-	for i in range(len(mean)):
-		variance[i]/=len(counts)
-	yield(word,json.dumps([len(counts),mean,variance]))
-	
-	
+		count_split=re.split(",",count)
+		actual_term=count_split[0]
+		top_probability=count_split[1]
+		# make sure our terms dictionary has all terms
+		terms[actual_term]=1
+		terms[top_probability]=1
+		# and classify into correct bucket
+		if(top_probability==actual_term):
+			correct[actual_term]+=1
+		else
+			false_positives[top_probability]+=1
+			false_negatives[actual_term]+=1
+	for term in terms:
+		correct_percent=correct[term]/(correct[term]+false_negatives[term])
+		false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
+		false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
+		yield(term,str(correct_percent)+"\t"+str(false_negative_percent)+"\t"+str(false_positive_percent)
+		
 
 if __name__ == "__main__":
   common.main(map, reduce)
