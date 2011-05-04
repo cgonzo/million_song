@@ -16,11 +16,7 @@ def map(line):
 		yield(tempo_string,track_id)
 
 def reduce(word, counts):
-	tempo_total=0
-	for count in counts:
-		tempo_total+=float(count)
-	tempo_average=tempo_total/len(counts)
-	yield("average",str(tempo_average))
+	pass
 
 if __name__ == "__main__":
   common.main(map, reduce)
