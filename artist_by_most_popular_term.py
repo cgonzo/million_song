@@ -18,7 +18,6 @@ def map(line):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
 			yield(terms[top_term],artist_name)
-		h5.close()
 
 def reduce(word, counts):
 	yield(word,str(len(counts)))
