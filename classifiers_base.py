@@ -125,7 +125,7 @@ def classify(h5):
 	artist_id=hdf5_getters.get_artist_id(h5,0)
 	output_array["artist_id"]=artist_id
 	# title
-	artist_name=hdf5_getters.get_title(h5,0)
+	title=hdf5_getters.get_title(h5,0)
 	output_array["title"]=title
 
 	return output_array
