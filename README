@@ -25,3 +25,8 @@ new add_database 1:00:52 for 14.63%
 Speedup lessons:
 hadoop fs -copyFromLocal not necessarily best option
 numpy significantly faster than python
+
+Annoyances:
+garbage collection failure
+
+total data size ~ 3GB
