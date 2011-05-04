@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# finds tracks with the highest hottness score in each category specified by input file
+
 import common
 import hdf5_getters
 import re
@@ -11,17 +13,17 @@ def map(line):
 		line_split=re.split("\t",line)
 		yield(line_split[1],"1")
 	else:
-		h5 = hdf5_getters.open_h5_file_read(line)
-		if(h5):
-			hottness=hdf5_getters.get_song_hotttnesss(h5,0)
-			if(hottness>0):
-				track_name=hdf5_getters.get_title(h5,0)
-				artist_name=hdf5_getters.get_artist_name(h5,0)
-				artist_terms=hdf5_getters.get_artist_terms(h5,0)
-				for term in artist_terms:
-					yield(term,str(hottness)+","+artist_name+" -- "+track_name)
-			h5.close()
-
+		line_split=re.split("\t",line)
+		track_id=line_split[0]
+		track_data=json.loads(line_split[1])
+		hottness=track_data["hottness"]
+		if(hottness>0):
+			track_name=track_data["title"]
+			artist_name=track_data["artist_name"]
+			artist_terms=track_data["artist_terms"]
+			for term in artist_terms:
+				yield(term,str(hottness)+","+artist_name+" -- "+track_name)
+				
 def reduce(word, counts):
 	use_term=0
 	artist_array=[]
