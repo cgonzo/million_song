@@ -9,15 +9,15 @@ def map(line):
 	line_split=re.split("\t",line)
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
-		terms=track_data["artist_terms"]
-		if len(terms)>0:
-			term_frequencies=track_data["artist_terms_freq"]
-			artist_name=track_data["artist_name"]
-			top_term=0
-			for i in range(len(terms)):
-				if(term_frequencies[i]>term_frequencies[top_term]):
-					top_term=i
-			yield(terms[top_term],artist_name)
+	terms=track_data["artist_terms"]
+	if len(terms)>0:
+		term_frequencies=track_data["artist_terms_freq"]
+		artist_name=track_data["artist_name"]
+		top_term=0
+		for i in range(len(terms)):
+			if(term_frequencies[i]>term_frequencies[top_term]):
+				top_term=i
+		yield(terms[top_term],artist_name)
 
 def reduce(word, counts):
 	yield(word,str(len(counts)))
