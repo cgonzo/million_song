@@ -21,7 +21,8 @@ def map(line):
 		yield(terms[top_term],artist_name)
 
 def reduce(word, counts):
-	yield(word,str(len(counts)))
+	count_sum_string="%010d"%len(counts)
+	yield(count_sum_string,word)
 
 if __name__ == "__main__":
   common.main(map, reduce)
