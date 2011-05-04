@@ -30,3 +30,7 @@ Annoyances:
 garbage collection failure
 
 total data size ~ 3GB
+
+building additionalfiles
+get test artist split from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/Tagging/artists_train.txt
+get cover song shs_dataset_test and _train from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_train.txt and https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_test.txt

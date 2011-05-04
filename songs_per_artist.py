@@ -1,15 +1,20 @@
 #!/usr/bin/python
 
+# returns number of songs for each artist
+
 import common
-import hdf5_getters
+import json
+import re
 
 # input: file name
 # output: artist_id artist_name
 def map(line):
-	h5 = hdf5_getters.open_h5_file_read(line)
-	num_songs = hdf5_getters.get_num_songs(h5)
-	artist_id=hdf5_getters.get_artist_id(h5,0)
-	artist_name=hdf5_getters.get_artist_name(h5,0)
+	line_split=re.split("\t",line)
+	track_id=line_split[0]
+	track_data=json.loads(line_split[1])
+	tempo=track_data["tempo"]
+	artist_id=track_data["artist_id"]
+	artist_name=track_data["artist_name"]
 	yield(artist_id,artist_name)
 
 def reduce(word, counts):
