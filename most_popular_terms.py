@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
 import common
-import hdf5_getters
+import json
 import re
 
 # input: file name
 # output: artist_id artist_name
 def map(line):
-	h5 = hdf5_getters.open_h5_file_read(line)
-	if(h5):
-		artist_terms=hdf5_getters.get_artist_terms(h5,0)
-		for term in artist_terms:
-			yield(term,"1")
-		h5.close()
+	line_split=re.split("\t",line)
+	track_id=line_split[0]
+	track_data=json.loads(line_split[1])
+	terms=track_data["artist_terms"]
+	for term in terms:
+		yield(term,"1")
 
 def reduce(word, counts):
 	count_sum_string="%010d"%sum([int(count) for count in counts])
