@@ -2,6 +2,7 @@
 
 import common
 import re
+import json
 
 # input: file name
 # output: artist_id artist_name
