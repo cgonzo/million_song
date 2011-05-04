@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import common
+import re
 import json
 
 # input: file name
