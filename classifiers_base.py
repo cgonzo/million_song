@@ -34,13 +34,13 @@ def classify(h5):
 	output_array["energy"]=energy	### ADDED VALUE TO ARRAY
 	# key
 	key=hdf5_getters.get_key(h5)
-	output_array["key"]=key	### ADDED VALUE TO ARRAY
+	output_array["key"]=int(key)	### ADDED VALUE TO ARRAY
 	# loudness
 	loudness=hdf5_getters.get_loudness(h5)
 	output_array["loudness"]=loudness	### ADDED VALUE TO ARRAY
 	# mode
 	mode=hdf5_getters.get_mode(h5)
-	output_array["mode"]=mode	### ADDED VALUE TO ARRAY
+	output_array["mode"]=int(mode)	### ADDED VALUE TO ARRAY
 	# number sections
 	sections=hdf5_getters.get_sections_start(h5)
 	num_sections=len(sections)
@@ -111,10 +111,10 @@ def classify(h5):
 	output_array["tempo"]=tempo	### ADDED VALUE TO ARRAY
 	# time signature
 	time_signature=hdf5_getters.get_time_signature(h5)
-	output_array["time_signature"]=time_signature	### ADDED VALUE TO ARRAY
+	output_array["time_signature"]=int(time_signature)	### ADDED VALUE TO ARRAY
 	# year
 	year=hdf5_getters.get_year(h5)
-	output_array["year"]=year	### ADDED VALUE TO ARRAY
+	output_array["year"]=int(year)	### ADDED VALUE TO ARRAY
 	# artist terms
 	artist_terms=hdf5_getters.get_artist_terms(h5,0)
 	output_array["artist_terms"]=artist_terms.tolist()
