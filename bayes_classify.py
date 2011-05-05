@@ -78,9 +78,12 @@ def reduce(word, counts):
 				false_positives[top_probability]+=1
 				false_negatives[actual_term]+=1
 	for term in classifier.keys():
-		correct_percent=correct[term]/(correct[term]+false_negatives[term])
-		false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
-		false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
+		if((correct[term]+false_negatives[term])>0):
+			correct_percent=correct[term]/(correct[term]+false_negatives[term])
+		if((correct[term]+false_negatives[term])>0):
+			false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
+		if((correct[term]+false_positives[term])>0):
+			false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
 		yield(term,str(correct_percent)+"\t"+str(false_negative_percent)+"\t"+str(false_positive_percent))
 		
 
