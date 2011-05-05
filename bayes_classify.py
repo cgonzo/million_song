@@ -106,5 +106,6 @@ if __name__ == "__main__":
 		for classifier_line in f:
 			classifier_line_split=re.split("\t",classifier_line.rstrip())
 			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+			print classifier_line
 		f.close()
 	common.main(map, reduce)
