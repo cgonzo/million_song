@@ -36,7 +36,7 @@ def map(line):
 					mean=means[data_label]
 					variance=variances[data_label]
 					# check to see if we're a list; if so, iterate over that list
-					if(getattr(mean,'__iter__',False):
+					if(getattr(mean,'__iter__',False)):
 						for i in range (0,len(mean)):
 							stdev=math.sqrt(variance[i])
 							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean[i])**2/(2*stdev))
