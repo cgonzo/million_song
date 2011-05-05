@@ -51,6 +51,10 @@ def reduce(word, counts):
 			variance[data_name]=numpy.var(data_array,axis=0).tolist()
 		# output
 		yield(word,json.dumps([len(counts),mean,variance]))
+		del interesting_data
+		del mean
+		del variance
+		gc.collect()		
 		
 	
 
