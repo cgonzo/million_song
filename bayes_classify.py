@@ -43,7 +43,7 @@ def map(line):
 						for i in range (0,len(mean)):
 							if variance[i]>0:
 								stdev=math.sqrt(variance[i])
-								probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*stdev))
+								probability=(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*stdev))
 								probabilities.append(probability)
 					else:	
 						if variance>0:
