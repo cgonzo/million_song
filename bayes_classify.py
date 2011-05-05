@@ -8,17 +8,6 @@ import re
 # input: songs (possibly to classify)
 # output: categories, category_prediction_percentage
 def map(line):
-	# create dictionary of test artists
-	artist_dict={}
-	f = open("artists_train.txt",'r')
-	for artist in f:
-		artist_dict[artist]=1
-	f.close()
-	classifier={}
-	f = open("build_bayes/part-00000",'r')
-	for classifier_line in f:
-		classifier_line_split=re.split("\t",classifier_line)
-		classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
 	line_split=re.split("\t",line)
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
@@ -80,4 +69,19 @@ def reduce(word, counts):
 		
 
 if __name__ == "__main__":
-  common.main(map, reduce)
+	# create dictionary of test artists
+	global artist_dict
+	artist_dict={}
+	f = open("artists_train.txt",'r')
+	for artist in f:
+		artist_dict[artist]=1
+	f.close()
+	global classifier
+	classifier={}
+	path = 'build_fisher/'
+	for infile in glob.glob( os.path.join(path, 'part*') ):
+		f = open(infile,'r')
+		for classifier_line in f:
+			classifier_line_split=re.split("\t",classifier_line)
+			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+	common.main(map, reduce)
