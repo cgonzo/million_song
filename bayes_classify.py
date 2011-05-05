@@ -69,10 +69,25 @@ def reduce(word, counts):
 		if actual_term in classifier.keys():
 			# and classify into correct/incorrect buckets
 			if(top_probability==actual_term):
-				correct[actual_term]+=1
+				if actual_term in correct.keys():
+					correct[actual_term]+=1
+				else:
+					correct[actual_term]=1
+					false_positives[actual_term]=0
+					false_negatives[actual_term]=0
 			else:
-				false_positives[top_probability]+=1
-				false_negatives[actual_term]+=1
+				if top_probability in correct.keys():
+					false_positives[top_probability]+=1
+				else:
+					correct[top_probability]=0
+					false_positives[top_probability]=1
+					false_negatives[top_probability]=0
+				if actual_term in correct.keys():
+					false_negatives[actual_term]+=1
+				else:
+					correct[actual_term]=0
+					false_positives[actual_term]=0
+					false_negatives[actual_term]=1
 	for term in classifier.keys():
 		correct_percent=correct[term]/(correct[term]+false_negatives[term])
 		false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
