@@ -21,6 +21,10 @@ upload to hdfs: 10:59-12:47 for 3/26
 old add_database 1:01:38 for 7.01%
 new add_database 25:00 for 7.01%
 new add_database 1:00:52 for 14.63%
+new add_database 6:54:24 for complete
+
+after add_database may have to reboot cluster
+due to starcluster error, have to reboot twice
 
 Speedup lessons:
 hadoop fs -copyFromLocal not necessarily best option
