@@ -78,10 +78,14 @@ if __name__ == "__main__":
 	f.close()
 	global classifier
 	classifier={}
-	path = 'build_fisher/'
-	for infile in glob.glob( os.path.join(path, 'part*') ):
-		f = open(infile,'r')
-		for classifier_line in f:
-			classifier_line_split=re.split("\t",classifier_line)
-			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+#	path = 'build_bayes/'
+#	for infile in glob.glob( os.path.join(path, 'part*') ):
+#		f = open(infile,'r')
+#		for classifier_line in f:
+#			classifier_line_split=re.split("\t",classifier_line)
+#			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+	f = open("out.txt","r")
+	for classifier_line in f:
+		classifier_line_split=re.split("\t",classifier_line)
+		classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
 	common.main(map, reduce)
