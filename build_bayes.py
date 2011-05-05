@@ -15,14 +15,14 @@ def map(line):
 	artist_id=track_data["artist_id"]
 	if(artist_dict.has_key(artist_id)):
 		# output array
-		artist_terms=track_data["artist_terms"]
+		terms=track_data["artist_terms"]
 		if len(terms)>0:
 			term_frequencies=track_data["artist_terms_freq"]
 			top_term=0
 			for i in range(len(terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			yield(artist_terms[top_term],line_split[1])
+			yield(terms[top_term],line_split[1])
 
 def reduce(word, counts):
 	if len(counts)>10000:	# only want ones where there's a lot of data
