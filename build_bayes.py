@@ -36,7 +36,7 @@ def reduce(word, counts):
 		# initialize storage
 		interesting_data={}
 		for data_name in interesting_data_names:
-			interesting_data['data_name']=[]
+			interesting_data[data_name]=[]
 		mean={}
 		variance={}
 		# go through each song and store the data we want in interesting_data
