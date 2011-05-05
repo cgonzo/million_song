@@ -6,8 +6,6 @@ import re
 import sys
 import numpy
 
-artist_dict={}
-
 # input: file name
 # output: artist_id artist_name
 def map(line):
@@ -59,6 +57,7 @@ def reduce(word, counts):
 if __name__ == "__main__":
 	# create dictionary of test artists
 	global artist_dict
+	artist_dict={}
 	f = open("artists_train.txt",'r')
 	for artist in f:
 		artist_dict[artist]=1
