@@ -48,7 +48,8 @@ def map(line):
 					else:	
 						if variance>0:
 							stdev=math.sqrt(variance)
-							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
+							# note that probability is not necessarily between 0 and 1 now, but is potentially between 0 and total number of data points
+							probability=(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 							probabilities.append(probability)
 							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
