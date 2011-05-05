@@ -60,6 +60,6 @@ if __name__ == "__main__":
 	artist_dict={}
 	f = open("artists_train.txt",'r')
 	for artist in f:
-		artist_dict[artist]=1
+		artist_dict[artist.rstrip()]=1
 	f.close()
 	common.main(map, reduce)
