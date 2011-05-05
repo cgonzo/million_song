@@ -50,12 +50,13 @@ def map(line):
 							stdev=math.sqrt(variance)
 							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 							probabilities.append(probability)
+					print probability
 				term_probability=numpy.prod(numpy.array(probabilities))
 				print classifier_term+" "+str(term_probability)
 				if term_probability>top_probability:
 					top_probability=term_probability
 					top_probability_term=classifier_term
-			yield("1",actual_term+","+top_probability_term)
+#			yield("1",actual_term+","+top_probability_term)
 		
 # output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
@@ -106,6 +107,5 @@ if __name__ == "__main__":
 		for classifier_line in f:
 			classifier_line_split=re.split("\t",classifier_line.rstrip())
 			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
-			print classifier_line_split[0]
 		f.close()
 	common.main(map, reduce)
