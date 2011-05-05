@@ -40,13 +40,15 @@ def map(line):
 					# check to see if we're a list; if so, iterate over that list
 					if(getattr(mean,'__iter__',False)):
 						for i in range (0,len(mean)):
-							stdev=math.sqrt(variance[i])
-							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*stdev))
-							probabilities.append(probability)
+							if variance[i]>0:
+								stdev=math.sqrt(variance[i])
+								probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*stdev))
+								probabilities.append(probability)
 					else:	
-						stdev=math.sqrt(variance)
-						probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
-						probabilities.append(probability)
+						if variance>0:
+							stdev=math.sqrt(variance)
+							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
+							probabilities.append(probability)
 				term_probability=numpy.prod(array(probabilities))
 				if term_probability>top_probability:
 					top_probability=term_probability
