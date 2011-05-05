@@ -42,15 +42,13 @@ def map(line):
 					if(getattr(mean,'__iter__',False)):
 						for i in range (0,len(mean)):
 							if variance[i]>0:
-								stdev=math.sqrt(variance[i])
 								# len(means) is to scale up so probability doesn't get infinitesimally small
-								probability=(1**25)*len(means)*(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*stdev))
+								probability=(count)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
 								probabilities.append(probability)
 					else:	
 						if variance>0:
-							stdev=math.sqrt(variance)
 							# len(means) is to scale up so probability doesn't get infinitesimally small
-							probability=(1**25)*len(means)*(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
+							probability=(count)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
 							probabilities.append(probability)
 							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
