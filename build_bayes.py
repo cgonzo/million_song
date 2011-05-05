@@ -47,8 +47,8 @@ def reduce(word, counts):
 		# convert lists in interesting_data to arrays and find mean and variance
 		for data_name in interesting_data_names:
 			data_array=numpy.array(interesting_data[data_name])
-			mean[data_name]=numpy.mean(data_array)
-			variance[data_name]=numpy.var(data_array)
+			mean[data_name]=numpy.mean(data_array,axis=0)
+			variance[data_name]=numpy.var(data_array,axis=0)
 		# output
 		yield(word,json.dumps([len(counts),mean,variance]))
 		
