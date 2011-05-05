@@ -54,7 +54,7 @@ def map(line):
 				if term_probability>top_probability:
 					top_probability=term_probability
 					top_probability_term=classifier_term
-			yield("1",actual_term+","+top_probability)
+			yield("1",actual_term+","+top_probability_term)
 		
 # output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
