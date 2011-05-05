@@ -34,9 +34,17 @@ def map(line):
 				for data_label in means.keys():
 					track_value=track_data[data_label]
 					mean=means[data_label]
-					stdev=math.sqrt(variances[data_label])
-					probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
-					probabilities.append(probability)
+					variance=variances[data_label]
+					# check to see if we're a list; if so, iterate over that list
+					if(getattr(mean,'__iter__',False):
+						for i in range (0,len(mean)):
+							stdev=math.sqrt(variance[i])
+							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean[i])**2/(2*stdev))
+							probabilities.append(probability)
+					else:	
+						stdev=math.sqrt(variance)
+						probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
+						probabilities.append(probability)
 				term_probability=numpy.prod(array(probabilities))
 				if term_probability>top_probability:
 					top_probability=term_probability
