@@ -30,7 +30,7 @@ def map(line):
 				count=classifier_data[0]
 				means=classifier_data[1]
 				variances=classifier_data[2]
-				for data_label in means.keys:
+				for data_label in means.keys():
 					track_value=track_data[data_label]
 					mean=means[data_label]
 					stdev=sqrt(variances[data_label])
