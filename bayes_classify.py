@@ -52,7 +52,7 @@ def map(line):
 							# len(means) is to scale up so probability doesn't get infinitesimally small
 							probability=(1**25)*len(means)*(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 							probabilities.append(probability)
-#							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
+							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
 				print classifier_term+" "+str(term_probability)
 				if term_probability>top_probability:
