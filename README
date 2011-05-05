@@ -29,6 +29,7 @@ due to starcluster error, have to reboot twice
 Speedup lessons:
 hadoop fs -copyFromLocal not necessarily best option
 numpy significantly faster than python
+use global: on build_bayes, speed up mapper from 54 minutes to 7:30
 
 Annoyances:
 garbage collection failure
