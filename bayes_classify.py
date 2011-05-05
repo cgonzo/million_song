@@ -12,7 +12,7 @@ def map(line):
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
-	if(artist_dict[artist_id]!=1):	# if we're not in train, we're in test
+	if(not artist_dict.has_key(artist_id)):
 		# find the actual term we're looking for
 		artist_terms=track_data["artist_terms"]
 		if len(terms)>0:

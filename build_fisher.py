@@ -27,7 +27,7 @@ def map(line):
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
-	if(artist_dict[artist_id]==1):
+	if(artist_dict.has_key(artist_id)):
 		# output array
 		artist_terms=track_data["artist_terms"]
 		if len(terms)>0:
