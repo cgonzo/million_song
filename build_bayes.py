@@ -6,15 +6,11 @@ import re
 import sys
 import numpy
 
+artist_dict={}
+
 # input: file name
 # output: artist_id artist_name
 def map(line):
-	# create dictionary of test artists
-	artist_dict={}
-	f = open("artists_train.txt",'r')
-	for artist in f:
-		artist_dict[artist]=1
-	f.close()
 	line_split=re.split("\t",line)
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
@@ -61,4 +57,10 @@ def reduce(word, counts):
 	
 
 if __name__ == "__main__":
-  common.main(map, reduce)
+	# create dictionary of test artists
+	global artist_dict
+	f = open("artists_train.txt",'r')
+	for artist in f:
+		artist_dict[artist]=1
+	f.close()
+	common.main(map, reduce)
