@@ -15,10 +15,10 @@ def map(line):
 	if(not artist_dict.has_key(artist_id)):
 		# find the actual term we're looking for
 		artist_terms=track_data["artist_terms"]
-		if len(terms)>0:
+		if len(artist_terms)>0:
 			term_frequencies=track_data["artist_terms_freq"]
 			top_term=0
-			for i in range(len(terms)):
+			for i in range(len(artist_terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
 			actual_term=artist_terms[i]
