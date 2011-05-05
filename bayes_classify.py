@@ -58,7 +58,7 @@ def reduce(word, counts):
 		# and classify into correct bucket
 		if(top_probability==actual_term):
 			correct[actual_term]+=1
-		else
+		else:
 			false_positives[top_probability]+=1
 			false_negatives[actual_term]+=1
 	for term in terms:
