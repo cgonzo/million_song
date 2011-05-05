@@ -41,8 +41,9 @@ def reduce(word, counts):
 			artist_array.append(count_split)
 	use_term=1
 	if use_term==1:
+		# sort array and return top 10 (or less than 10 if there aren't ten items)
 		sorted_array=sorted(artist_array, key=lambda artist_array: artist_array[0])
-		for i in range(1,11):
+		for i in range(1,min(len(sorted_array),11)):
 			yield(word,sorted_array[len(sorted_array)-i][1]+" ("+sorted_array[len(sorted_array)-i][0]+")")
 
 if __name__ == "__main__":
