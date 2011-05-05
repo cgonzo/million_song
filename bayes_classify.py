@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	artist_dict={}
 	f = open("artists_train.txt",'r')
 	for artist in f:
-		artist_dict[artist]=1
+		artist_dict[artist.rstrip()]=1
 	f.close()
 	global classifier
 	classifier={}
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 	for infile in glob.glob( os.path.join(path, 'part*') ):
 		f = open(infile,'r')
 		for classifier_line in f:
-			classifier_line_split=re.split("\t",classifier_line)
+			classifier_line_split=re.split("\t",classifier_line.rstrip())
 			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
 		f.close()
 	common.main(map, reduce)
