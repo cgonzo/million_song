@@ -3,7 +3,7 @@
 # finds tracks with the highest hottness score in each category specified by input file
 
 import common
-import hdf5_getters
+import json
 import re
 
 # input: file name
