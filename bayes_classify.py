@@ -50,7 +50,7 @@ def map(line):
 							stdev=math.sqrt(variance)
 							probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 							probabilities.append(probability)
-					print str(probability)
+							print str(track_value)+" "+str(mean)+" "+str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
 				print classifier_term+" "+str(term_probability)
 				if term_probability>top_probability:
