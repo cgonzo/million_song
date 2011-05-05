@@ -5,6 +5,7 @@ import json
 import re
 import sys
 import numpy
+import gc
 
 # input: file name
 # output: artist_id artist_name
