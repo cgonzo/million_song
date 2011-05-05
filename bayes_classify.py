@@ -65,7 +65,7 @@ def reduce(word, counts):
 		correct_percent=correct[term]/(correct[term]+false_negatives[term])
 		false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
 		false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
-		yield(term,str(correct_percent)+"\t"+str(false_negative_percent)+"\t"+str(false_positive_percent)
+		yield(term,str(correct_percent)+"\t"+str(false_negative_percent)+"\t"+str(false_positive_percent))
 		
 
 if __name__ == "__main__":
