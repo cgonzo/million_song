@@ -13,7 +13,7 @@ def map(line):
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
 	loudness_variance=track_data["segment_loudness_variance"]
-	variance_string="%010.6f" %variance
+	variance_string="%010.6f" %loudness_variance
 	track_name=track_data["title"]
 	artist_name=track_data["artist_name"]
 	yield(variance_string,artist_name+" -- "+track_name)
