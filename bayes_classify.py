@@ -4,6 +4,7 @@ import common
 import json
 import sys
 import re
+import math
 
 # input: songs (possibly to classify)
 # output: categories, category_prediction_percentage
@@ -33,8 +34,8 @@ def map(line):
 				for data_label in means.keys():
 					track_value=track_data[data_label]
 					mean=means[data_label]
-					stdev=sqrt(variances[data_label])
-					probability=count/1000000*(1/(stdev*2*pi()))*exp(-(track_value-mean)**2/(2*stdev))
+					stdev=math.sqrt(variances[data_label])
+					probability=(count/1000000)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 					probabilities.append(probability)
 				term_probability=numpy.prod(array(probabilities))
 				if term_probability>top_probability:
