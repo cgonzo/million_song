@@ -48,7 +48,7 @@ def map(line):
 						if variance>0:
 							probability=(count/1000000)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
 							probabilities.append(probability)
-							print str(probability)
+						print str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
 				for probability in probabilities:
 					print classifier_term+" "+str(probability)
