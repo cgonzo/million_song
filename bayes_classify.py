@@ -51,7 +51,7 @@ def map(line):
 							# note that probability is not necessarily between 0 and 1 now, but is potentially between 0 and total number of data points
 							probability=(count)*(1/(stdev*2*math.pi))*math.exp(-(track_value-mean)**2/(2*stdev))
 							probabilities.append(probability)
-							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
+#							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
 				print classifier_term+" "+str(term_probability)
 				if term_probability>top_probability:
