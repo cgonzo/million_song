@@ -2,6 +2,7 @@
 
 import common
 import json
+import numpy
 import sys
 import re
 import math
