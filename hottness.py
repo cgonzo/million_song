@@ -17,7 +17,7 @@ def map(line):
 		track_id=line_split[0]
 		track_data=json.loads(line_split[1])
 		hottness=track_data["hottness"]
-		if(hottness>0):
+		if (hottness>0) && (hottness<1.0):
 			track_name=track_data["title"]
 			artist_name=track_data["artist_name"]
 			artist_terms=track_data["artist_terms"]
