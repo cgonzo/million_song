@@ -38,18 +38,19 @@ def map(line):
 					variances=classifier_data[2]
 					for data_label in means.keys():
 						track_value=track_data[data_label]
-						mean=means[data_label]
-						variance=variances[data_label]
-						# check to see if we're a list; if so, iterate over that list
-						if(getattr(mean,'__iter__',False)):
-							for i in range (0,len(mean)):
-								if variance[i]>0:
-									probability=(count/1000000.0)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
+						if track_value!=0:
+							mean=means[data_label]
+							variance=variances[data_label]
+							# check to see if we're a list; if so, iterate over that list
+							if(getattr(mean,'__iter__',False)):
+								for i in range (0,len(mean)):
+									if variance[i]>0:
+										probability=(count/1000000.0)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
+										probabilities.append(probability)
+							else:	
+								if variance>0:
+									probability=(count/1000000.0)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
 									probabilities.append(probability)
-						else:	
-							if variance>0:
-								probability=(count/1000000.0)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
-								probabilities.append(probability)
 					term_probability=numpy.prod(numpy.array(probabilities))
 					if term_probability>top_probability:
 						top_probability=term_probability
