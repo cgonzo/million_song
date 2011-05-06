@@ -39,7 +39,7 @@ def map(line):
 					if key==artist_terms[top_term]:
 						match_string="1,"
 						yield(key,match_string+json.dumps(data_for_output))
-					else:
+					elif (not key in artist_terms):
 						match_string="0,"
 						yield(key,match_string+json.dumps(data_for_output))
 				
@@ -82,8 +82,13 @@ def reduce(word, counts):
 		v=numpy.dot(linalg.pinv(scatter_within),(mean1-mean2))
 	except:
 		v=numpy.array(["error in creating v"])
+	#find threshold
+	if len(v)>1:
+		threshold=numpy.dot(v,(mean1+mean2).T)/2.0
+	else:
+		threshold=0
 	# output
-	yield(word,json.dumps(v.tolist()))
+	yield(word,str(threshold)+","+json.dumps(v.tolist()))
 	#yield(word,str(linalg.det(scatter_within)))
 
 if __name__ == "__main__":
