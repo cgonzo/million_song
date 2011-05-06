@@ -49,11 +49,11 @@ def map(line):
 							probability=(count/1000000)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
 							probabilities.append(probability)
 							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
-					print str(probability)
+#					print str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
 				for probability in probabilities:
-					print classifier_term+" "+str(probability)
-				print "*** FINAL PROBABILITY "+str(term_probability)
+#					print classifier_term+" "+str(probability)
+#				print "*** FINAL PROBABILITY "+str(term_probability)
 				if term_probability>top_probability:
 					top_probability=term_probability
 					top_probability_term=classifier_term
