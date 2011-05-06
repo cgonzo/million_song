@@ -104,7 +104,7 @@ if __name__ == "__main__":
 		f = open(infile,'r')
 		for classifier_line in f:
 			classifier_line_split=re.split("\t",classifier_line.rstrip())
-			classifier_data_split=re.split(",",count,maxsplit=1)
+			classifier_data_split=re.split(",",classifier_line_split[1],maxsplit=1)
 			threshold[classifier_line_split[0]]=classifier_data_split[0]
 			classifier[classifier_line_split[0]]=json.loads(classifier_data_split[1])
 		f.close()
