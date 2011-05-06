@@ -15,7 +15,11 @@ def map(line):
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
 	if(artist_dict.has_key(artist_id)):
-		# output array
+		# build output array
+		interesting_data={}
+		for data_name in interesting_data_names:
+			if(track_data[data_name]!=0):
+				interesting_data[data_name]=track_data[data_name]
 		terms=track_data["artist_terms"]
 		if len(terms)>0:
 			term_frequencies=track_data["artist_terms_freq"]
@@ -23,17 +27,10 @@ def map(line):
 			for i in range(len(terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			yield(terms[top_term],line_split[1])
+			yield(terms[top_term],json.dumps(interesting_data))
 
 def reduce(word, counts):
 	if len(counts)>10000:	# only want ones where there's a lot of data
-		interesting_data_names=["duration","num_bars","variance_bar_length","num_beats",
-			"variance_beats_length","danceability","end_of_fade_in","energy","key","loudness","mode",
-			"num_sections","variance_sections_length","num_segments","variance_segments_length",
-			"segment_loudness_max","segment_loudness_time","segment_loudness_mean",
-			"segment_loudness_variance","segment_pitches_mean","segment_pitches_variance",
-			"segment_timbres_mean","segment_timbres_variance","hottness","fade_out","num_tatums",
-			"variance_tatums_length","tempo","time_signature","year"]
 		# initialize storage
 		interesting_data={}
 		for data_name in interesting_data_names:
@@ -61,6 +58,14 @@ def reduce(word, counts):
 	
 
 if __name__ == "__main__":
+	global interesting_data_names
+	interesting_data_names=["duration","num_bars","variance_bar_length","num_beats",
+			"variance_beats_length","danceability","end_of_fade_in","energy","key","loudness","mode",
+			"num_sections","variance_sections_length","num_segments","variance_segments_length",
+			"segment_loudness_max","segment_loudness_time","segment_loudness_mean",
+			"segment_loudness_variance","segment_pitches_mean","segment_pitches_variance",
+			"segment_timbres_mean","segment_timbres_variance","hottness","fade_out","num_tatums",
+			"variance_tatums_length","tempo","time_signature","year"]
 	# create dictionary of test artists
 	global artist_dict
 	artist_dict={}
