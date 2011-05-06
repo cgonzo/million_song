@@ -6,6 +6,7 @@ import re
 import sys
 import numpy
 from numpy import linalg
+import gc
 
 # input: file name
 # output: top term, data
@@ -63,6 +64,8 @@ def reduce(word, counts):
 			data_for_key.append(track_data)
 		else:
 			data_for_not_key.append(track_data)
+		del track_data
+		gc.collect()
 	data_for_key_array=numpy.array(data_for_key)
 	data_for_not_key_array=numpy.array(data_for_not_key)
 #	print json.dumps(data_for_key)
