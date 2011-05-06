@@ -25,7 +25,7 @@ def map(line):
 			for i in range(len(artist_terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			actual_term=artist_terms[i]	
+			actual_term=artist_terms[top_term]	
 			# we only want to do this if it's one of the categories we classify
 			if actual_term in classifier.keys():
 				# calculate the probabilities for each term, find top
