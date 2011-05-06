@@ -44,7 +44,8 @@ def reduce(word, counts):
 		for count in counts:
 			track_data=json.loads(count)
 			for data_name in interesting_data_names:
-				interesting_data[data_name].append(track_data[data_name])
+				if(track_data[data_name]!=0):
+					interesting_data[data_name].append(track_data[data_name])
 		# convert lists in interesting_data to arrays and find mean and variance
 		for data_name in interesting_data_names:
 			data_array=numpy.array(interesting_data[data_name])
