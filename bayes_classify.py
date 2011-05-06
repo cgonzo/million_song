@@ -79,7 +79,7 @@ def reduce(word, counts):
 				false_negatives[actual_term]+=1
 #				print "****WRONG****"+str(false_positives[top_probability])+" "+str(false_negatives[actual_term])
 	for term in classifier.keys():
-		yield_string=str(correct[term])+"\t"+str(false_negatives[term])+"\t"+str(false_positives[term])
+		yield_string=str(correct[term]+false_negatives[term])+"\t"+str(correct[term])+"\t"+str(false_negatives[term])+"\t"+str(false_positives[term])
 		yield(term,yield_string)
 		
 
