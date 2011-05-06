@@ -26,13 +26,22 @@ def map(line):
 					top_term=i
 			# if the top term is in one of the terms we care about, output it
 			if artist_terms[top_term] in term_dict.keys():
+				# go from large dictionary to array of terms we care about here
+				data_for_output=[]
+				for data_name in interesting_data_names:
+					if(getattr(track_data[data_name],'__iter__',False)):
+						for data in track_data[data_name]:
+							data_for_output.append(data)
+					else:
+						data_for_output.append(track_data[data_name])
+				# and output our data
 				for key in term_dict.keys():
 					if key==artist_terms[top_term]:
 						match_string="1,"
-						yield(key,match_string+line_split[1])
+						yield(key,match_string+json.dumps(data_for_output))
 					elif (not key in artist_terms):
 						match_string="0,"
-						yield(key,match_string+line_split[1])
+						yield(key,match_string+json.dumps(data_for_output))
 				
 
 def reduce(word, counts):
