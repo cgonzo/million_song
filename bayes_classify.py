@@ -42,7 +42,7 @@ def map(line):
 					if(getattr(mean,'__iter__',False)):
 						for i in range (0,len(mean)):
 							if variance[i]>0:
-								probability=(count/1000000)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
+								probability=(count/1000000.0)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
 								probabilities.append(probability)
 					else:	
 						if variance>0:
