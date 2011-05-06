@@ -82,7 +82,10 @@ def reduce(word, counts):
 	print numpy.shape(scatter1)
 	print numpy.shape(scatter2)
 	scatter_within=scatter1+scatter2
-	v=numpy.dot(linalg.pinv(scatter_within),(mean1-mean2))
+	try:
+		v=numpy.dot(linalg.pinv(scatter_within),(mean1-mean2))
+	except:
+		v=["error in creating v"]
 	# output
 	yield(word,json.dumps(v.tolist()))
 	#yield(word,str(linalg.det(scatter_within)))
