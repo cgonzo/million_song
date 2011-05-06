@@ -72,8 +72,8 @@ def reduce(word, counts):
 	print numpy.shape(data_for_not_key)
 	mean1=numpy.mean(data_for_key_array,axis=1)
 	mean2=numpy.mean(data_for_not_key_array,axis=1)
-	scatter1=numpy.shape(data_for_key_array)[0]*numpy.cov(data_for_key_array)
-	scatter2=numpy.shape(data_for_not_key_array)[0]*numpy.cov(data_for_not_key_array)
+	scatter1=numpy.shape(data_for_key_array)[0]*numpy.cov(data_for_key_array,rowvar=0)
+	scatter2=numpy.shape(data_for_not_key_array)[0]*numpy.cov(data_for_not_key_array,rowvar=0)
 	print numpy.shape(scatter1)
 	print numpy.shape(scatter2)
 	scatter_within=scatter1+scatter2
