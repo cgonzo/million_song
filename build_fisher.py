@@ -77,6 +77,7 @@ def reduce(word, counts):
 	print numpy.shape(scatter1)
 	print numpy.shape(scatter2)
 	scatter_within=scatter1+scatter2
+	print scatter_within
 	v=linalg.inv(scatter_within)*(mean1-mean2)
 	# output
 	yield(word,json.dumps(v))
