@@ -43,7 +43,7 @@ def map(line):
 					probabilities=[]
 					v=numpy.array(classifier_data)
 					term_probability=numpy.dot(v,data_for_key_array.T)-threshold[classifier_term]
-					print classifier_term+"\t"+str(term_probability)
+#					print classifier_term+"\t"+str(term_probability)
 					if term_probability>top_probability:
 						top_probability=term_probability
 						top_probability_term=classifier_term
