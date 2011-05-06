@@ -29,7 +29,7 @@ def map(line):
 				for key in term_dict.keys():
 					if key==artist_terms[top_term]:
 						match_string="1,"
-					else:
+					elif (not key in artist_terms):
 						match_string="0,"
 					yield(key,match_string+line_split[1])
 				
