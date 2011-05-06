@@ -31,7 +31,7 @@ def map(line):
 						match_string="1,"
 					else:
 						match_string="0,"
-					yield(key,match_string+line_split[1])
+					yield(key,match_string+","+line_split[1])
 				
 
 def reduce(word, counts):
