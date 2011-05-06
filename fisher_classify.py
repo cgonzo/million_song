@@ -54,26 +54,29 @@ def reduce(word, counts):
 	false_positives={}
 	false_negatives={}
 	correct={}
-	terms={}
+	for key in classifier.keys():
+		correct[key]=0
+		false_positives[key]=0
+		false_negatives[key]=0
+	false_positives["unknown"]=0
 	for count in counts:
 		count_split=re.split(",",count)
 		actual_term=count_split[0]
 		top_probability=count_split[1]
-		# make sure our terms dictionary has all terms
-		terms[actual_term]=1
-		terms[top_probability]=1
-		# and classify into correct bucket
-		if(top_probability==actual_term):
-			correct[actual_term]+=1
-		else:
-			false_positives[top_probability]+=1
-			false_negatives[actual_term]+=1
-	for term in terms:
-		correct_percent=correct[term]/(correct[term]+false_negatives[term])
-		false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
-		false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
-		yield(term,str(correct_percent)+"\t"+str(false_negative_percent)+"\t"+str(false_positive_percent))
-		
+#		print actual_term+" "+top_probability
+		# we only want to do this if it's one of the categories we classify
+		if actual_term in classifier.keys():
+			# and classify into correct/incorrect buckets
+			if(top_probability==actual_term):
+				correct[actual_term]+=1
+#				print "****MATCH****"+str(correct[actual_term])
+			else:
+				false_positives[top_probability]+=1
+				false_negatives[actual_term]+=1
+#				print "****WRONG****"+str(false_positives[top_probability])+" "+str(false_negatives[actual_term])
+	for term in classifier.keys():
+		yield_string=str(correct[term]+false_negatives[term])+"\t"+str(correct[term])+"\t"+str(false_negatives[term])+"\t"+str(false_positives[term])
+		yield(term,yield_string)		
 
 if __name__ == "__main__":
 	global interesting_data_names
