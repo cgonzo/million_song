@@ -39,7 +39,7 @@ def map(line):
 					if key==artist_terms[top_term]:
 						match_string="1,"
 						yield(key,match_string+json.dumps(data_for_output))
-					elif (not key in artist_terms):
+					else:
 						match_string="0,"
 						yield(key,match_string+json.dumps(data_for_output))
 				
