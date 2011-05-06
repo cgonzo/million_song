@@ -83,10 +83,10 @@ def reduce(word, counts):
 	print numpy.shape(scatter2)
 	scatter_within=scatter1+scatter2
 	print scatter_within
-	#v=linalg.inv(scatter_within)*(mean1-mean2)
+	v=linalg.pinv(scatter_within)*(mean1-mean2)
 	# output
-	#yield(word,json.dumps(v))
-	yield(word,str(linalg.det(scatter_within)))
+	yield(word,json.dumps(v))
+	#yield(word,str(linalg.det(scatter_within)))
 
 if __name__ == "__main__":
 	global interesting_data_names
