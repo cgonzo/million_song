@@ -52,11 +52,20 @@ def reduce(word, counts):
 		if count_split[0]=="1":
 			data_for_key.append([])
 			for data_name in interesting_data_names:
-				data_for_key[len(data_for_key)-1].append(track_data[data_name])
+				# check to see if we're a list; if so, iterate over that list
+				if(getattr(mean,'__iter__',False)):
+					for data in track_data[data_name]:
+						data_for_key[len(data_for_key)-1].append(data)
+				else:
+					data_for_key[len(data_for_key)-1].append(track_data[data_name])
 		else:
 			data_for_not_key.append([])
 			for data_name in interesting_data_names:
-				data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
+				if(getattr(mean,'__iter__',False)):
+					for data in track_data[data_name]:
+						data_for_not_key[len(data_for_not_key)-1].append(data)
+				else:
+					data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
 	print len(data_for_key)
 	for data in data_for_key:
 		small_data_for_key_array=numpy.array(data)
