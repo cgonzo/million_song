@@ -42,9 +42,10 @@ def map(line):
 				for classifier_term,classifier_data in classifier.items():
 					probabilities=[]
 					v=numpy.array(classifier_data)
-					probability_array=v.T*data_for_key_array.T
+					probability_array=numpy.dot(v,data_for_key_array.T)
+					print(numpy.shape(probability_array))
 					term_probability=numpy.sum(probability_array)
-					print classifier_term+"\t"+str(term_probability)
+					print classifier_term+"\t"+str(probability_arra)
 					if term_probability>top_probability:
 						top_probability=term_probability
 						top_probability_term=classifier_term
