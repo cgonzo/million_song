@@ -88,7 +88,7 @@ if __name__ == "__main__":
 	term_dict={}
 	f = open("most_popular_terms_sorted.txt")
 	for term_line in f:
-		term_line_split=re.split("\t",term_line)
+		term_line_split=re.split("\t",term_line.rstrip())
 		term_dict[term_line[1]]=1
 	f.close()
 	common.main(map, reduce)
