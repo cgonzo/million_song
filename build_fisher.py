@@ -47,7 +47,7 @@ def reduce(word, counts):
 	data_for_not_key_covariance=[]
 	# go through each song and store the data we want in interesting_data
 	for count in counts:
-		count_split=re.split(",",count)
+		count_split=re.split(",",count,maxsplit=1)
 		print count_split[1]
 		track_data=json.loads(count_split[1])
 		if count_split[0]=="1":
