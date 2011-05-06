@@ -57,7 +57,9 @@ def reduce(word, counts):
 			data_for_not_key.append([])
 			for data_name in interesting_data_names:
 				data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
-	print data_for_key
+	print len(data_for_key)
+	for data in data_for_key:
+		print len(data)
 #	data_for_key_array=numpy.array(data_for_key)
 #	data_for_not_key_array=numpy.array(data_for_not_key)
 #	mean1=numpy.mean(data_for_key_array,axis=1)
