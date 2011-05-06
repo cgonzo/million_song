@@ -110,7 +110,7 @@ if __name__ == "__main__":
 	f.close()
 	global term_dict
 	term_dict={}
-	f = open("most_popular_terms_sorted.txt")
+	f = open("artist_by_most_popular_term_sorted.txt")
 	for term_line in f:
 		term_line_split=re.split("\t",term_line.rstrip())
 		term_dict[term_line_split[1]]=1
