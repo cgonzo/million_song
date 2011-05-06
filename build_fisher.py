@@ -85,7 +85,7 @@ def reduce(word, counts):
 	print scatter_within
 	v=numpy.dot(linalg.pinv(scatter_within),(mean1-mean2))
 	# output
-	yield(word,json.dumps(v))
+	yield(word,json.dumps(v.tolist()))
 	#yield(word,str(linalg.det(scatter_within)))
 
 if __name__ == "__main__":
