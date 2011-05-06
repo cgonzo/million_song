@@ -60,22 +60,9 @@ def reduce(word, counts):
 		count_split=re.split(",",count,maxsplit=1)
 		track_data=json.loads(count_split[1])
 		if count_split[0]=="1":
-			data_for_key.append([])
-			for data_name in interesting_data_names:
-				# check to see if we're a list; if so, iterate over that list
-				if(getattr(track_data[data_name],'__iter__',False)):
-					for data in track_data[data_name]:
-						data_for_key[len(data_for_key)-1].append(data)
-				else:
-					data_for_key[len(data_for_key)-1].append(track_data[data_name])
+			data_for_key.append(track_data)
 		else:
-			data_for_not_key.append([])
-			for data_name in interesting_data_names:
-				if(getattr(track_data[data_name],'__iter__',False)):
-					for data in track_data[data_name]:
-						data_for_not_key[len(data_for_not_key)-1].append(data)
-				else:
-					data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
+			data_for_not_key.append(track_data)
 	data_for_key_array=numpy.array(data_for_key)
 	data_for_not_key_array=numpy.array(data_for_not_key)
 #	print json.dumps(data_for_key)
