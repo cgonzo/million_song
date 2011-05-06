@@ -81,15 +81,15 @@ def reduce(word, counts):
 	for term in classifier.keys():
 		yield_string=""
 		if((correct[term]+false_negatives[term])>0):
-			correct_percent=correct[term]/(correct[term]+false_negatives[term])
+			correct_percent=correct[term]/float(correct[term]+false_negatives[term])
 			yield_string+=str(correct_percent)
 		yield_string+="\t"
 		if((correct[term]+false_negatives[term])>0):
-			false_negative_percent=false_negatives[term]/(correct[term]+false_negatives[term])
+			false_negative_percent=false_negatives[term]/float(correct[term]+false_negatives[term])
 			yield_string+=str(false_negative_percent)
 		yield_string+="\t"
 		if((correct[term]+false_positives[term])>0):
-			false_positive_percent=false_positives[term]/(correct[term]+false_positives[term])
+			false_positive_percent=false_positives[term]/float(correct[term]+false_positives[term])
 			yield_string+=str(false_positive_percent)
 		yield(term,yield_string)
 		
