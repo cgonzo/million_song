@@ -77,7 +77,7 @@ def reduce(word, counts):
 			else:
 				false_positives[top_probability]+=1
 				false_negatives[actual_term]+=1
-				print "****WRONG****"+str(false_positives[top_probability])+" "+false_negatives[actual_term]
+				print "****WRONG****"+str(false_positives[top_probability])+" "+str(false_negatives[actual_term])
 	for term in classifier.keys():
 		yield_string=""
 		if((correct[term]+false_negatives[term])>0):
