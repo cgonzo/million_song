@@ -65,7 +65,7 @@ def reduce(word, counts):
 		top_probability=count_split[1]
 #		print actual_term+" "+top_probability
 		# we only want to do this if it's one of the categories we classify
-		if actual_term in classifier.keys():
+		if classifier.has_key(actual_term):
 			# and classify into correct/incorrect buckets
 			if(top_probability==actual_term):
 				correct[actual_term]+=1

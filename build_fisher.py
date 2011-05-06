@@ -25,7 +25,7 @@ def map(line):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
 			# if the top term is in one of the terms we care about, output it
-			if artist_terms[top_term] in term_dict.keys():
+			if term_dict.has_key(artist_terms[top_term]):
 				# go from large dictionary to array of terms we care about here
 				data_for_output=[]
 				for data_name in interesting_data_names:

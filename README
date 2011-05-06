@@ -30,6 +30,7 @@ Speedup lessons:
 hadoop fs -copyFromLocal not necessarily best option
 numpy significantly faster than python
 use global: on build_bayes, speed up mapper from 54 minutes to 7:30
+dictionary.has_key(key) is way way faster than key in dictionary.keys()
 
 Annoyances:
 garbage collection failure
