@@ -59,6 +59,7 @@ def reduce(word, counts):
 				data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
 	print len(data_for_key)
 	for data in data_for_key:
+		small_data_for_key_array=numpy.array(data)
 		print len(data)
 #	data_for_key_array=numpy.array(data_for_key)
 #	data_for_not_key_array=numpy.array(data_for_not_key)
