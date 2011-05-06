@@ -25,34 +25,36 @@ def map(line):
 			for i in range(len(artist_terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			actual_term=artist_terms[i]
-			# calculate the probabilities for each term, find top
-			top_probability_term=actual_term # initialize top term
-			top_probability=0
-			for classifier_term,classifier_data in classifier.items():
-				probabilities=[]
-				count=classifier_data[0]
-				means=classifier_data[1]
-				variances=classifier_data[2]
-				for data_label in means.keys():
-					track_value=track_data[data_label]
-					mean=means[data_label]
-					variance=variances[data_label]
-					# check to see if we're a list; if so, iterate over that list
-					if(getattr(mean,'__iter__',False)):
-						for i in range (0,len(mean)):
-							if variance[i]>0:
-								probability=(count/1000000.0)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
+			actual_term=artist_terms[i]	
+			# we only want to do this if it's one of the categories we classify
+			if actual_term in classifier.keys():
+				# calculate the probabilities for each term, find top
+				top_probability_term=actual_term # initialize top term
+				top_probability=0
+				for classifier_term,classifier_data in classifier.items():
+					probabilities=[]
+					count=classifier_data[0]
+					means=classifier_data[1]
+					variances=classifier_data[2]
+					for data_label in means.keys():
+						track_value=track_data[data_label]
+						mean=means[data_label]
+						variance=variances[data_label]
+						# check to see if we're a list; if so, iterate over that list
+						if(getattr(mean,'__iter__',False)):
+							for i in range (0,len(mean)):
+								if variance[i]>0:
+									probability=(count/1000000.0)*(1/math.sqrt(variance[i]*2*math.pi))*math.exp(-(track_value[i]-mean[i])**2/(2*variance[i]))
+									probabilities.append(probability)
+						else:	
+							if variance>0:
+								probability=(count/1000000.0)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
 								probabilities.append(probability)
-					else:	
-						if variance>0:
-							probability=(count/1000000.0)*(1/math.sqrt(variance*2*math.pi))*math.exp(-(track_value-mean)**2/(2*variance))
-							probabilities.append(probability)
-				term_probability=numpy.prod(numpy.array(probabilities))
-				if term_probability>top_probability:
-					top_probability=term_probability
-					top_probability_term=classifier_term
-			yield("1",actual_term+","+top_probability_term+","+str(top_probability))
+					term_probability=numpy.prod(numpy.array(probabilities))
+					if term_probability>top_probability:
+						top_probability=term_probability
+						top_probability_term=classifier_term
+				yield("1",actual_term+","+top_probability_term+","+str(top_probability))
 		
 # output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
