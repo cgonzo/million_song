@@ -54,6 +54,8 @@ def map(line):
 					if term_probability>top_probability:
 						top_probability=term_probability
 						top_probability_term=classifier_term
+				if top_probability=0:
+					top_probability_term="unknown"
 				yield("1",actual_term+","+top_probability_term+","+str(top_probability))
 		
 # output: actual category, correct prediction %, wrong prediction %
