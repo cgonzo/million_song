@@ -67,6 +67,7 @@ def reduce(word, counts):
 		correct[key]=0
 		false_positives[key]=0
 		false_negatives[key]=0
+	false_positives["unknown"]=0
 	for count in counts:
 		count_split=re.split(",",count)
 		actual_term=count_split[0]
