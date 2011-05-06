@@ -28,7 +28,11 @@ def map(line):
 			# make data array for this track
 			data_for_key=[]
 			for data_name in interesting_data_names:
-				data_for_key.append(track_data[data_name])
+				if(getattr(track_data[data_name],'__iter__',False)):
+					for data in track_data[data_name]:
+						data_for_key.append(data)
+				else:
+					data_for_key.append(track_data[data_name])
 			data_for_key_array=numpy.array(data_for_key)
 			# figure out which category gives us the top classifier
 			top_probability_term=actual_term # initialize top term
