@@ -45,7 +45,7 @@ def map(line):
 					probability_array=numpy.dot(v,data_for_key_array.T)
 					print(numpy.shape(probability_array))
 					term_probability=numpy.sum(probability_array)
-					print classifier_term+"\t"+str(probability_arra)
+					print classifier_term+"\t"+str(probability_array)
 					if term_probability>top_probability:
 						top_probability=term_probability
 						top_probability_term=classifier_term
