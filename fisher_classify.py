@@ -10,36 +10,11 @@ import glob
 # input: songs (possibly to classify)
 # output: categories, category_prediction_percentage
 def map(line):
-	interesting_data_names=["duration","num_bars","variance_bar_length","num_beats",
-		"variance_beats_length","danceability","end_of_fade_in","energy","key","loudness","mode",
-		"num_sections","variance_sections_length","num_segments","variance_segments_length",
-		"segment_loudness_max","segment_loudness_time","segment_loudness_mean",
-		"segment_loudness_variance","segment_pitches_mean","segment_pitches_variance",
-		"segment_timbres_mean","segment_timbres_variance","hottness","fade_out","num_tatums",
-		"variance_tatums_length","tempo","time_signature","year"]
-	# create dictionary of test artists
-	artist_dict={}
-	f = open("artists_train.txt",'r')
-	for artist in f:
-		artist_dict[artist]=1
-	f.close()
-	
-	# import our classifier
-	# we want to iterate over all files starting with "part" in the directory
-	# code from http://bogdan.org.ua/2007/08/12/python-iterate-and-read-all-files-in-a-directory-folder.html
-	classifier={}
-	path = 'build_fisher/'
-	for infile in glob.glob( os.path.join(path, 'part*') ):
-		f = open(infile,'r')
-		for classifier_line in f:
-			classifier_line_split=re.split("\t",classifier_line)
-			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
-		f.close()
 	line_split=re.split("\t",line)
 	track_id=line_split[0]
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
-	if(artist_dict[artist_id]!=1):	# if we're not in train, we're in test
+	if(not artist_id in artist_dict.keys()):	# if we're not in train, we're in test
 		# find the actual term we're looking for
 		artist_terms=track_data["artist_terms"]
 		if len(artist_terms)>0:
@@ -65,7 +40,7 @@ def map(line):
 				if term_probability>top_probability:
 					top_probability=term_probability
 					top_probability_term=classifier_term
-			yield("1",actual_term+","+top_probability)
+			yield("1",actual_term+","+top_probability_term,",",str(top_probability))
 		
 # output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
@@ -94,4 +69,32 @@ def reduce(word, counts):
 		
 
 if __name__ == "__main__":
-  common.main(map, reduce)
+	global interesting_data_names
+	# removing hottness for now because it keeps us from inverting our matricies
+	interesting_data_names=["duration","num_bars","variance_bar_length","num_beats",
+			"variance_beats_length","danceability","end_of_fade_in","energy","key","loudness","mode",
+			"num_sections","variance_sections_length","num_segments","variance_segments_length",
+			"segment_loudness_max","segment_loudness_time","segment_loudness_mean",
+			"segment_loudness_variance","segment_pitches_mean","segment_pitches_variance",
+			"segment_timbres_mean","segment_timbres_variance","fade_out","num_tatums",
+			"variance_tatums_length","tempo","time_signature","year"]
+	# create dictionary of test artists
+	global artist_dict
+	artist_dict={}
+	f = open("artists_train.txt",'r')
+	for artist in f:
+		artist_dict[artist.rstrip()]=1
+	f.close()
+	# import our classifier
+	# we want to iterate over all files starting with "part" in the directory
+	# code from http://bogdan.org.ua/2007/08/12/python-iterate-and-read-all-files-in-a-directory-folder.html
+	global classifier
+	classifier={}
+	path = 'build_fisher/'
+	for infile in glob.glob( os.path.join(path, 'part*') ):
+		f = open(infile,'r')
+		for classifier_line in f:
+			classifier_line_split=re.split("\t",classifier_line.rstrip())
+			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+		f.close()
+	common.main(map, reduce)
