@@ -48,6 +48,7 @@ def reduce(word, counts):
 	# go through each song and store the data we want in interesting_data
 	for count in counts:
 		count_split=re.split(",",count)
+		print count_split[1]
 		track_data=json.loads(count_split[1])
 		if count_split[0]=="1":
 			data_for_key.append([])
