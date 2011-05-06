@@ -24,7 +24,7 @@ def map(line):
 			for i in range(len(artist_terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			for key in artist_terms.keys():
+			for key in artist_terms:
 				if key==artist_terms[top_term]:
 					match_string="1,"
 				else:
