@@ -25,7 +25,7 @@ def map(line):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
 			# if the top term is in one of the terms we care about, output it
-			if artist_terms[top_term] in term_dict.keys:
+			if artist_terms[top_term] in term_dict.keys():
 				for key in term_dict.keys():
 					if key==artist_terms[top_term]:
 						match_string="1,"
