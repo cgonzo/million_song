@@ -66,20 +66,16 @@ def reduce(word, counts):
 						data_for_not_key[len(data_for_not_key)-1].append(data)
 				else:
 					data_for_not_key[len(data_for_not_key)-1].append(track_data[data_name])
-	print len(data_for_key)
-	for data in data_for_key:
-		small_data_for_key_array=numpy.array(data)
-		print len(data)
-#	data_for_key_array=numpy.array(data_for_key)
-#	data_for_not_key_array=numpy.array(data_for_not_key)
-#	mean1=numpy.mean(data_for_key_array,axis=1)
-#	mean2=numpy.mean(data_for_not_key_array,axis=1)
-#	scatter1=numpy.shape(data_for_key_array)[0]*numpy.cov(data_for_key_array)
-#	scatter2=numpy.shape(data_for_not_key_array)[0]*numpy.cov(data_for_not_key_array)
-#	scatter_within=scatter1+scatter2
-#	v=linalg.inv(scatter_within)*(mean1-mean2)
+	data_for_key_array=numpy.array(data_for_key)
+	data_for_not_key_array=numpy.array(data_for_not_key)
+	mean1=numpy.mean(data_for_key_array,axis=1)
+	mean2=numpy.mean(data_for_not_key_array,axis=1)
+	scatter1=numpy.shape(data_for_key_array)[0]*numpy.cov(data_for_key_array)
+	scatter2=numpy.shape(data_for_not_key_array)[0]*numpy.cov(data_for_not_key_array)
+	scatter_within=scatter1+scatter2
+	v=linalg.inv(scatter_within)*(mean1-mean2)
 	# output
-#	yield(word,json.dumps(v))
+	yield(word,json.dumps(v))
 
 if __name__ == "__main__":
 	global interesting_data_names
