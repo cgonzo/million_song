@@ -83,4 +83,4 @@ if __name__ == "__main__":
 	for artist in f:
 		artist_dict[artist.rstrip()]=1
 	f.close()
-  common.main(map, reduce)
+	common.main(map, reduce)
