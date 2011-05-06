@@ -24,28 +24,30 @@ def map(line):
 			for i in range(len(artist_terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			actual_term=artist_terms[i]
-			# make data array for this track
-			data_for_key=[]
-			for data_name in interesting_data_names:
-				if(getattr(track_data[data_name],'__iter__',False)):
-					for data in track_data[data_name]:
-						data_for_key.append(data)
-				else:
-					data_for_key.append(track_data[data_name])
-			data_for_key_array=numpy.array(data_for_key)
-			# figure out which category gives us the top classifier
-			top_probability_term=actual_term # initialize top term
-			top_probability=-1000
-			for classifier_term,classifier_data in classifier.items():
-				probabilities=[]
-				v=numpy.array(classifier_data)
-				probability_array=v.T*data_for_key_array.T
-				term_probability=numpy.sum(probability_array)
-				if term_probability>top_probability:
-					top_probability=term_probability
-					top_probability_term=classifier_term
-			yield("1",actual_term+","+top_probability_term+","+str(top_probability))
+			actual_term=artist_terms[i]	
+			# we only want to do this if it's one of the categories we classify
+			if actual_term in classifier.keys():
+				# make data array for this track
+				data_for_key=[]
+				for data_name in interesting_data_names:
+					if(getattr(track_data[data_name],'__iter__',False)):
+						for data in track_data[data_name]:
+							data_for_key.append(data)
+					else:
+						data_for_key.append(track_data[data_name])
+				data_for_key_array=numpy.array(data_for_key)
+				# figure out which category gives us the top classifier
+				top_probability_term=actual_term # initialize top term
+				top_probability=-1000
+				for classifier_term,classifier_data in classifier.items():
+					probabilities=[]
+					v=numpy.array(classifier_data)
+					probability_array=v.T*data_for_key_array.T
+					term_probability=numpy.sum(probability_array)
+					if term_probability>top_probability:
+						top_probability=term_probability
+						top_probability_term=classifier_term
+				yield("1",actual_term+","+top_probability_term+","+str(top_probability))
 		
 # output: actual category, correct prediction %, wrong prediction %
 def reduce(word, counts):
