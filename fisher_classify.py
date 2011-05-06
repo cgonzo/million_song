@@ -3,6 +3,7 @@
 import common
 import json
 import sys
+import numpy
 import re
 import os
 import glob
