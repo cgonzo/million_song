@@ -27,10 +27,15 @@ after add_database may have to reboot cluster
 due to starcluster error, have to reboot twice
 
 Speedup lessons:
-hadoop fs -copyFromLocal not necessarily best option
-numpy significantly faster than python
-use global: on build_bayes, speed up mapper from 54 minutes to 7:30
-dictionary.has_key(key) is way way faster than key in dictionary.keys()
+The most interesting lesson from this project was that using "hadoop fs -copyFromLocal" was not necessarily the fastest way to get data into the array when not all data is needed. In our case, the million song database contains a lot of information that could be further compressed; it contained several time sequence of data when our data processing tasks were only concerned with the mean and variances of these sequences. By computing these means and variances and only uploading them, a significant speedup was gained.
+
+ For the million song database's data, directly uploading to the hadoop filesystem would have taken over 60 hours, while running a map-reduce job where the filenames were passed to the mapper, which then accessed the files over NFS, processed them, and uploaded them took under 7 hours for a 4-node cluster. The uncompressed data is GB, while the compressed data that was uploaded is only GB
+
+Numpy is significantly faster than trying to do math in Python. When trying to do any sort of math over a list, converting that list to a Numpy array, running a Numpy operation on the array, and converting the array back to a list is orders of magnitude faster than iterating over that list in Python. This was discovered early in the project, so there is no hard data for the amount of speedup gained by this, but it would be significant.
+
+Use global variables for constants. When building the Bayesian classifier, the original design was for the list of training artists to be re-loaded from disk at every iteration of the mapper. By moving this from the mapper to program start, the execution time of building the classifier dropped from 54 minutes to seven and a half.
+
+To determine whether an artist is in the test or training set, the classifiers look in a dictionary which has the training set artists as a key. Using the statement "dictionary.has_key(key)", which presumably hashes the key and sees if there is any data under that hash, is much faster than the statement "key in dictionary.keys()" which presumably grabs all of the keys from dictionary and then compares them individually to key. In retrospect this makes sense, but at the time that one line was responsible for quadrupling the running time of the classifier.
 
 Annoyances:
 garbage collection failure
