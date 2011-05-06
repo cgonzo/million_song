@@ -84,6 +84,8 @@ if __name__ == "__main__":
 	for artist in f:
 		artist_dict[artist.rstrip()]=1
 	f.close()
+	global term_dict
+	term_dict={}
 	f = open("most_popular_terms_sorted.txt")
 	for term_line in f:
 		term_line_split=re.split("\t",term_line)
