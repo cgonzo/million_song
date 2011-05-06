@@ -42,8 +42,8 @@ def map(line):
 				for classifier_term,classifier_data in classifier.items():
 					probabilities=[]
 					v=numpy.array(classifier_data)
-					term_probability=numpy.dot(v,data_for_key_array.T)
-					print classifier_term+"\t"+str(probability_array)
+					term_probability=numpy.dot(v,data_for_key_array.T)-threshold[classifier_term]
+					print classifier_term+"\t"+str(term_probability)
 					if term_probability>top_probability:
 						top_probability=term_probability
 						top_probability_term=classifier_term
@@ -96,12 +96,16 @@ if __name__ == "__main__":
 	# we want to iterate over all files starting with "part" in the directory
 	# code from http://bogdan.org.ua/2007/08/12/python-iterate-and-read-all-files-in-a-directory-folder.html
 	global classifier
+	global threshold
 	classifier={}
+	threshold={}
 	path = 'build_fisher/'
 	for infile in glob.glob( os.path.join(path, 'part*') ):
 		f = open(infile,'r')
 		for classifier_line in f:
 			classifier_line_split=re.split("\t",classifier_line.rstrip())
-			classifier[classifier_line_split[0]]=json.loads(classifier_line_split[1])
+			classifier_data_split=re.split(",",count,maxsplit=1)
+			threshold[classifier_line_split[0]]=classifier_data_split[0]
+			classifier[classifier_line_split[0]]=json.loads(classifier_data_split[1])
 		f.close()
 	common.main(map, reduce)
