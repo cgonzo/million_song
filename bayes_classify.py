@@ -51,7 +51,7 @@ def map(line):
 							print str(track_value)+" "+str(mean)+" "+str(variance)+" "+str(probability)
 #					print str(probability)
 				term_probability=numpy.prod(numpy.array(probabilities))
-				for probability in probabilities:
+#				for probability in probabilities:
 #					print classifier_term+" "+str(probability)
 #				print "*** FINAL PROBABILITY "+str(term_probability)
 				if term_probability>top_probability:
