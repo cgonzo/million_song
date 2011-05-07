@@ -63,8 +63,10 @@ def reduce(word, counts):
 			data_for_key_string+=count_split[1]+","
 		else:
 			data_for_not_key_string+=count_split[1]+","
-	data_for_key_string[-1]="]"
-	data_for_not_key_string[-1]="]"
+	data_for_key_string=data_for_key_string[:-1]
+	data_for_not_key_string=data_for_not_key_string[:-1]
+	data_for_key_string+="]"
+	data_for_not_key_string+="]"
 	print data_for_key_string
 	print data_for_not_key_string
 	data_for_key_array=numpy.array(json.loads(data_for_key_string))
