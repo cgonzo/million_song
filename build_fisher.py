@@ -50,8 +50,8 @@ def reduce(word, counts):
 	# data_for_key
 	# new row for each observation
 	# column=data
-	data_for_key=[]
-	data_for_not_key=[]
+	data_for_key_string="["
+	data_for_not_key_string="["
 	data_for_key_mean=[]
 	data_for_not_key_mean=[]
 	data_for_key_covariance=[]
@@ -59,15 +59,16 @@ def reduce(word, counts):
 	# go through each song and store the data we want in interesting_data
 	for count in counts:
 		count_split=re.split(",",count,maxsplit=1)
-		track_data=json.loads(count_split[1])
 		if count_split[0]=="1":
-			data_for_key.append(track_data)
+			data_for_key_string+=count_split[1]+","
 		else:
-			data_for_not_key.append(track_data)
-		del track_data
-		gc.collect()
-	data_for_key_array=numpy.array(data_for_key)
-	data_for_not_key_array=numpy.array(data_for_not_key)
+			data_for_not_key_string+=count_split[1]+","
+	data_for_key_string[-1]="]"
+	data_for_not_key_string[-1]="]"
+	print data_for_key_string
+	print data_for_not_key_string
+	data_for_key_array=numpy.array(json.loads(data_for_key_string))
+	data_for_not_key_array=numpy.array(json.loads(data_for_not_key_string))
 #	print json.dumps(data_for_key)
 #	print json.dumps(data_for_not_key)
 #	print numpy.shape(data_for_key)
