@@ -42,9 +42,10 @@ def map(line):
 			probabilities=[]
 			v=numpy.array(classifier_data)
 			term_probability=numpy.dot(v,data_for_key_array.T)-threshold["rock"]
-			term_probability_string="%010.6f" %term_probability
-			title=track_data["title"]
-			yield(term_probability_string,title)
+			if term_probability>0:
+				term_probability_string="%010.6f" %term_probability
+				title=track_data["title"]
+				yield(term_probability_string,title)
 		
 def reduce(word, counts):
 	pass
