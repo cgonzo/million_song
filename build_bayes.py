@@ -32,30 +32,29 @@ def map(line):
 				yield(terms[top_term],json.dumps(interesting_data))
 
 def reduce(word, counts):
-	if len(counts)>10000:	# only want ones where there's a lot of data
-		# initialize storage
-		interesting_data={}
+	# initialize storage
+	interesting_data={}
+	for data_name in interesting_data_names:
+		interesting_data[data_name]=[]
+	mean={}
+	variance={}
+	# go through each song and store the data we want in interesting_data
+	for count in counts:
+		track_data=json.loads(count)
 		for data_name in interesting_data_names:
-			interesting_data[data_name]=[]
-		mean={}
-		variance={}
-		# go through each song and store the data we want in interesting_data
-		for count in counts:
-			track_data=json.loads(count)
-			for data_name in interesting_data_names:
-				if(data_name in track_data.keys()):
-					interesting_data[data_name].append(track_data[data_name])
-		# convert lists in interesting_data to arrays and find mean and variance
-		for data_name in interesting_data_names:
-			data_array=numpy.array(interesting_data[data_name])
-			mean[data_name]=numpy.mean(data_array,axis=0).tolist()
-			variance[data_name]=numpy.var(data_array,axis=0).tolist()
-		# output
-		yield(word,json.dumps([len(counts),mean,variance]))
-		del interesting_data
-		del mean
-		del variance
-		gc.collect()		
+			if(data_name in track_data.keys()):
+				interesting_data[data_name].append(track_data[data_name])
+	# convert lists in interesting_data to arrays and find mean and variance
+	for data_name in interesting_data_names:
+		data_array=numpy.array(interesting_data[data_name])
+		mean[data_name]=numpy.mean(data_array,axis=0).tolist()
+		variance[data_name]=numpy.var(data_array,axis=0).tolist()
+	# output
+	yield(word,json.dumps([len(counts),mean,variance]))
+	del interesting_data
+	del mean
+	del variance
+	gc.collect()		
 		
 	
 
