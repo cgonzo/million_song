@@ -15,9 +15,9 @@ def map(line):
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
 	if(artist_dict.has_key(artist_id)):
+		terms=track_data["artist_terms"]
 		if len(terms)>0:
 			term_frequencies=track_data["artist_terms_freq"]
-			terms=track_data["artist_terms"]
 			top_term=0
 			for i in range(len(terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
