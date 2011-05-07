@@ -37,6 +37,8 @@ Use global variables for constants. When building the Bayesian classifier, the o
 
 To determine whether an artist is in the test or training set, the classifiers look in a dictionary which has the training set artists as a key. Using the statement "dictionary.has_key(key)", which presumably hashes the key and sees if there is any data under that hash, is much faster than the statement "key in dictionary.keys()" which presumably grabs all of the keys from dictionary and then compares them individually to key. In retrospect this makes sense, but at the time that one line was responsible for quadrupling the running time of the classifier.
 
+Data that is more complicated than a few values is passed between mappers and reducers using JSON objects. This makes programming much simpler, but is a very slow method; json.loads(object) takes a long time to output an object regardless of the size of it. Because of this, it's much faster to decode a single large object than several smaller objects. This fact was used to speed up the fisher classification. The first part of the classifier builder takes arrays from the mappers and combines it into single two-dimensional array. The cost of converting each json object to an array and combining these coupled with the large amount of time taken up by the actual classifier building work caused the reducer not to finish in ten minutes, causing a timeout. By using string manipulations to combine these json objects into a single object and import that instead, eight of the ten reducers was able to run in the allotted ten minutes. The ultimate solution for this was to increase the timeout.
+
 Annoyances:
 garbage collection failure
 
