@@ -29,7 +29,7 @@ due to starcluster error, have to reboot twice
 Speedup lessons:
 The most interesting lesson from this project was that using "hadoop fs -copyFromLocal" was not necessarily the fastest way to get data into the array when not all data is needed. In our case, the million song database contains a lot of information that could be further compressed; it contained several time sequence of data when our data processing tasks were only concerned with the mean and variances of these sequences. By computing these means and variances and only uploading them, a significant speedup was gained.
 
- For the million song database's data, directly uploading to the hadoop filesystem would have taken over 60 hours, while running a map-reduce job where the filenames were passed to the mapper, which then accessed the files over NFS, processed them, and uploaded them took under 7 hours for a 4-node cluster. The uncompressed data is GB, while the compressed data that was uploaded is only GB
+ For the million song database's data, directly uploading to the hadoop filesystem would have taken over 60 hours, while running a map-reduce job where the filenames were passed to the mapper, which then accessed the files over NFS, processed them, and uploaded them took under 7 hours for a 4-node cluster. The uncompressed data is 271GB, while the compressed data that was uploaded is only 3GB
 
 Numpy is significantly faster than trying to do math in Python. When trying to do any sort of math over a list, converting that list to a Numpy array, running a Numpy operation on the array, and converting the array back to a list is orders of magnitude faster than iterating over that list in Python. This was discovered early in the project, so there is no hard data for the amount of speedup gained by this, but it would be significant.
 
@@ -41,9 +41,25 @@ Data that is more complicated than a few values is passed between mappers and re
 
 Annoyances:
 garbage collection failure
+danceability = 0 for all songs 
 
 total data size ~ 3GB
 
 building additionalfiles
 get test artist split from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/Tagging/artists_train.txt
 get cover song shs_dataset_test and _train from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_train.txt and https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_test.txt
+
+script for presentation:
+The million song database is a recently released collection of the features and metadata for a million contemporary songs. This database spans over two hundred and seventy gigabytes, which makes it a great test of hadoop
+
+As a warm-up exercise, we can very easily find the AVERAGE TEMPO, MOST POPULAR GENRE, FASTEST SONG, and several other statistics. 
+
+The dataset includes measures of a song's loudness for each of its sections. By taking the variance of these loudnesses, we can determine the difference in volume between the loud and quiet sections of a song. If we graph the average of these variances per year, we see a weak upward trend. However if we focus on just the last twenty years, we see a much more clear trend toward higher variances in loudness. 
+
+The dataset also includes a list of cover songs. Using this, we can find the most influential artist. we take each group of cover songs and attach release dates to the songs, then call the oldest song the original and the others covers. We can then turn this into a link map, with the cover songs linking to the original. We then pagerank this link map to find the most influential artists.
+
+Finally, we can try some machine learning algorithms on this data. We tried two classification algorithms: a naive Bayes classifier and the Fisher Linear Discriminant. The Bayes classifier does a great job finding the members of the most popular category, in this case rock, but a terrible job of classifying the rest, correctly categorizing only 0.6% of them. The Fisher classifier does worse in finding rock songs, but a better job overall, correctly classifying 54% of songs versus 38% for Bayes
+
+Finally, we can turn this classification algorithm inward, using it to find the song that best fits into a category. Doing this for rock, the largest Genre, we get the most generic rock song as being Oasis's Better Man.
+
+This work just scratches the surface of what you can do with the million song dataset. I encourage each of you to play around with it on your own. Feel free to play around with my code on Github and have fun.
