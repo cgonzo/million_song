@@ -45,7 +45,8 @@ def map(line):
 			if term_probability>0:
 				term_probability_string="%010.6f" %term_probability
 				title=track_data["title"]
-				yield(term_probability_string,title)
+				artist_name=track_data["artist_name"]
+				yield(term_probability_string,artist_name+" -- "+title)
 		
 def reduce(word, counts):
 	pass
