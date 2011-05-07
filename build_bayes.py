@@ -15,19 +15,21 @@ def map(line):
 	track_data=json.loads(line_split[1])
 	artist_id=track_data["artist_id"]
 	if(artist_dict.has_key(artist_id)):
-		# build output array
-		interesting_data={}
-		for data_name in interesting_data_names:
-			if(track_data[data_name]!=0):
-				interesting_data[data_name]=track_data[data_name]
-		terms=track_data["artist_terms"]
 		if len(terms)>0:
 			term_frequencies=track_data["artist_terms_freq"]
+			terms=track_data["artist_terms"]
 			top_term=0
 			for i in range(len(terms)):
 				if(term_frequencies[i]>term_frequencies[top_term]):
 					top_term=i
-			yield(terms[top_term],json.dumps(interesting_data))
+			# if the top term is in one of the terms we care about, output it
+			if term_dict.has_key(terms[top_term]):
+				# build output array
+				interesting_data={}
+				for data_name in interesting_data_names:
+					if(track_data[data_name]!=0):
+						interesting_data[data_name]=track_data[data_name]
+				yield(terms[top_term],json.dumps(interesting_data))
 
 def reduce(word, counts):
 	if len(counts)>10000:	# only want ones where there's a lot of data
@@ -72,5 +74,12 @@ if __name__ == "__main__":
 	f = open("artists_train.txt",'r')
 	for artist in f:
 		artist_dict[artist.rstrip()]=1
+	f.close()
+	global term_dict
+	term_dict={}
+	f = open("artist_by_most_popular_term_sorted.txt")
+	for term_line in f:
+		term_line_split=re.split("\t",term_line.rstrip())
+		term_dict[term_line_split[1]]=1
 	f.close()
 	common.main(map, reduce)
