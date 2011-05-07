@@ -1,0 +1,14 @@
+./artist_by_most_popular_term.sh
+./average_tempo.sh 
+./bayes.sh
+./cover_song_prepare.sh
+./cover_song.sh
+./danceability.sh
+./fastest.sh
+./fisher.sh
+./hottness.sh
+./loudness_by_year.sh
+./loudness.sh
+./most_generic_pop.sh
+./most_popular_terms.sh
+./songs_per_artist.sh
