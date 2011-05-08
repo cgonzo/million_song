@@ -1,26 +1,22 @@
-Right now, everything is running on Cloudera VM.
-
-Steps to get working on Cloudera VM:
-sudo apt-get install python-numpy
-sudo apt-get install python-tables
-python ./display_song.py -summary msd_summary_file.h5
-
-Steps to get working on Starcluster AMI:
-install hdf5
-apt-get remove cython
-install cython
-install numexpr
-export HDF5_DIR
-export LD_LIBRARY_PATH
-install pytables
-
-Quick getting started:
-Clone S3 volume
+QUICK GETTING STARTED (this will only work until May 15, when I delete the snapshot):
+Clone S3 snapshot snap-b1367ade onto a 350GB EBS volume
 Use Starcluster to start cluster with cloned volume at /mnt/data
 SSH to master and each node and “source /mnt/data/initialize64.sh” on master and each node
 Ssh to master; “cd million_song”
 Add dataset to Hadoop. Either “./add_database.sh” (this will take several hours) or “hadoop fs -copyFromLocal /mnt/data/hadoop_backup/data data” (this will take a few minutes)
+You should now be ready to go. Try running some of the .sh scripts.
 
+GETTING STARTED WITHOUT THE AWS SNAPSHOT
+Getting PyTables:
+HDF5_getters.py requires PyTables. If you’re on a standard Ubuntu image, you can just apt-get python-tables
+If you’re on Starcluster’s Hadoop AMI, you need to download the following:
+“apt-get remove cython”
+Download and install the latest version of Cython
+Download and install the latest version of numexpr
+Download and install the latest version of hdf5
+Export HDF5_DIR=directory where you installed HDF5
+Export LD_LIBRARY_PATH= path to HDF5 shared libraries (HDF5_DIR/lib)
+Download and install the latest version of PyTables
 
 Manually generating /mnt/data:
 Download the Million Song Dataset from http://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset and extract it into /mnt/data/AdditionalFiles and /mnt/data/data 
@@ -29,8 +25,77 @@ Download cover song database from https://github.com/tb2332/MSongsDB/raw/master/
 Run filelist.sh to generate filelist.txt. Copy this to /mnt/data
 Run add_database.sh to add data to the Hadoop file system. After running this, it is suggested to reboot the cluster before continuing.
 
+DESCRIPTION OF EACH SCRIPT:
+Add_database.sh:
+Requires filelist.sh to be run first and filelist.txt to be copied to /mnt/data.
+Goes through /mnt/data/data, processes and copies data to Hadoop file system. MUST BE RUN BEFORE ANY HADOOP SCRIPTS
+
+All.sh:
+Runs all Hadoop scripts
+
+artist_by_most_popular_term.sh
+Finds the most commonly tagged genre for each artist, then counts these up to create a top-ten list. This list is then used for the Bayes and Fisher classifiers.
+
+Average_tempo.sh
+Finds the average tempo across all songs
+
+Bayes.sh
+Builds and runs the Bayes classifier
+
+Bayes_classify.sh
+Runs previously-built Bayes classifier
+
+Cover_song.sh
+Requires cover_song_prepare to be run first
+Page ranks most influential artists using cover song database
+
+Cover_song_prepare.sh
+Converts cover song database into a format that is easier to run map-reduce on.
+
+Cover_song_results.sh
+Returns results of cover_song.sh in a tab-delimited format for easy import into Excel
+
+Danceability.sh
+Finds the average danceability score. Note that this is 0, as no song has a danceability score.
+
+Fastest.sh
+Sorts songs by tempo
+
+Filelist.sh
+Generates filelist.txt. After running, copy this file to /mnt/data. This is needed to run add_database.sh.
+
+Fisher.sh
+Builds and runs the Fisher classifier
+
+Fisher_classify.sh
+Runs previously-built Fisher classifier
+
+Hottness.sh
+Finds top 10 songs in “hotttnesss” in each genre
+
+Initialize64.sh
+This script resides on /mnt/data and is run on master and each node after cluster creation to install necessary packages
+
+Loudness.sh
+Find song with highest variance in loudness
+
+Loudness_by_year.sh
+Report the average variance in loudness per year
+
+Most_generic_pop.sh
+Finds most generic rock song by running Fisher classifier on all rock songs and sorting by the rock classifier’s score. Must have generated Fisher classifier before running this.
+
+Most_popular_terms.sh
+Finds most popular terms that songs have been tagged with
+
+Songs_per_artist.sh
+Reports how many songs each artist has in the dataset.
+
+Timing.sh
+Runs a representative sample of scripts in order to compare speeds between different-sized clusters
 
 
+PROJECT WRITEUP:
 Project background:
 Pandora and similar projects have popularized the analysis and machine learning of large audio sets. The Million Song Dataset is a recently released collection of the features and metadata for a million contemporary songs. This database spans over two hundred and seventy gigabytes, which makes it a great test of Hadoop’s abilities with large files. 
 
@@ -39,6 +104,15 @@ The data from the dataset is divided into a million separate files, one file per
 The dataset contains both user- and automatically-generated metadata (genre, hotness, dance-ability) as well as data about each section, segment, tatum, bar, and beat of the song. An additional project added a manually-generated database about cover songs, consisting of a unique cover song identifier and the title and artist identifiers of each version of that song.
 
 This program is divided into separate shell scripts to run each individual Hadoop job. For the majority of the shell scripts, there is no post-processing and the data is just left in the Hadoop file system. For scripts that output data that a future job will rely on (e.g. the classifiers use lists of the top ten most popular terms that were previously generated), they do the necessary post-processing and keep the generated text files in the current directory of the local file system. There are also a few scripts to batch up a large number of jobs; all.sh runs all of the tasks while timing.sh runs a subset used for timing comparisons between clusters of different sizes.
+
+Parallelization:
+Three tasks were run on both 4- and 8-node M1-large clusters in an attempt to characterize the speed of the three different types of tasks. The script to find the average tempo is a good representative of the majority of the scripts in the project: a mapper that mostly just reads data from the dataset followed by a simple reducer. This ran on the 8-node cluster in 47.8% of the time of the 4-node cluster, nearing the perfect 2x speedup that was expected.
+
+The cover song pagerank algorithm didn’t do as well. This had over twenty separate map-reduce tasks run in serial. The majority of the time was spent breaking down a previous map-reduce or starting up a new one rather than in the actual map-reduce. Because of this, adding more nodes to the cluster only reduced runtime by 3%. I would expect for the improvement with more nodes to increase if a larger cover song database was used, but the linkmap created for this database was too simple to fully utilize the added nodes.
+
+Building the Fisher classifier is inherently limited in its parallelism because it can only run ten reducers at the same time, one for each category it is classifying. We see the 8-node cluster taking 43% less time than the 4-node cluster because the 4-node cluster can only run 8 jobs at one time, while the 8-node cluster can run all 10. After all reducers are running at once, however, adding nodes will not help. A future optimization would be to use a parallel algorithm in the place of this reducer to build the classification matrix
+
+Categorization with the Fisher classifier, on the other hand, does take advantage of as many nodes as possible. We see it running in 48% less time with an 8-node cluster versus 4-node.
 
 Speedup lessons:
 The most interesting lesson from this project was that using "hadoop fs -copyFromLocal" was not necessarily the fastest way to get data into the array when not all data is needed. In our case, the million song database contains a lot of information that could be further compressed; it contained several time sequences of data when our data processing tasks were only concerned with the mean and variances of these sequences. By computing these means and variances from the raw files and then only uploading them rather than the original files, a significant speedup was attained.
@@ -71,7 +145,7 @@ This project intentionally avoided trying to figure out machine learning methods
 
 
 
-script for presentation:
+SCRIPT FOR VIDEO PRESENTATION:
 The million song database is a recently released collection of the features and metadata for a million contemporary songs. This database spans over two hundred and seventy gigabytes, which makes it a great test of hadoop
 
 As a warm-up exercise, we can very easily find the AVERAGE TEMPO, MOST POPULAR GENRE, FASTEST SONG, and several other statistics. 
