@@ -14,19 +14,21 @@ export HDF5_DIR
 export LD_LIBRARY_PATH
 install pytables
 
-Times:
-2 small most_popular_terms 3:52:56
-4 small most_popular_terms 2:26:21
-upload to hdfs: 10:59-12:47 for 3/26
-old add_database 1:01:38 for 7.01%
-new add_database 25:00 for 7.01%
-new add_database 1:00:52 for 14.63%
-new add_database 6:54:24 for complete
+Quick getting started:
+Clone S3 volume
+Use Starcluster to start cluster with cloned volume at /mnt/data
+SSH to master and each node and “source /mnt/data/initialize64.sh” on master and each node
+Ssh to master; “cd million_song”
+Add dataset to Hadoop. Either “./add_database.sh” (this will take several hours) or “hadoop fs -copyFromLocal /mnt/data/hadoop_backup/data data” (this will take a few minutes)
 
-after add_database may have to reboot cluster
-due to starcluster error, have to reboot twice
 
-Readme:
+Manually generating /mnt/data:
+Download the Million Song Dataset from http://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset and extract it into /mnt/data/AdditionalFiles and /mnt/data/data 
+Download test artist split from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/Tagging/artists_train.txt and add it to AdditionalFiles
+Download cover song database from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_train.txt and https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_test.txt and add them to AdditionalFiles
+Run filelist.sh to generate filelist.txt. Copy this to /mnt/data
+Run add_database.sh to add data to the Hadoop file system. After running this, it is suggested to reboot the cluster before continuing.
+
 
 
 Project background:
@@ -67,11 +69,7 @@ During the middle of the project, a lyrics database was introduced. This will be
 
 This project intentionally avoided trying to figure out machine learning methods for time-differing data; we took the mean and variance of pitch and loudness rather than trying to see how it changed over time. Figuring out how to incorporate this time data into classifiers would be an interesting challenge.
 
-total data size ~ 3GB
 
-building additionalfiles
-get test artist split from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/Tagging/artists_train.txt
-get cover song shs_dataset_test and _train from https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_train.txt and https://github.com/tb2332/MSongsDB/raw/master/Tasks_Demos/CoverSongs/shs_dataset_test.txt
 
 script for presentation:
 The million song database is a recently released collection of the features and metadata for a million contemporary songs. This database spans over two hundred and seventy gigabytes, which makes it a great test of hadoop
