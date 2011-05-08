@@ -26,22 +26,46 @@ new add_database 6:54:24 for complete
 after add_database may have to reboot cluster
 due to starcluster error, have to reboot twice
 
-Speedup lessons:
-The most interesting lesson from this project was that using "hadoop fs -copyFromLocal" was not necessarily the fastest way to get data into the array when not all data is needed. In our case, the million song database contains a lot of information that could be further compressed; it contained several time sequence of data when our data processing tasks were only concerned with the mean and variances of these sequences. By computing these means and variances and only uploading them, a significant speedup was gained.
+Readme:
 
- For the million song database's data, directly uploading to the hadoop filesystem would have taken over 60 hours, while running a map-reduce job where the filenames were passed to the mapper, which then accessed the files over NFS, processed them, and uploaded them took under 7 hours for a 4-node cluster. The uncompressed data is 271GB, while the compressed data that was uploaded is only 3GB
+
+Project background:
+Pandora and similar projects have popularized the analysis and machine learning of large audio sets. The Million Song Dataset is a recently released collection of the features and metadata for a million contemporary songs. This database spans over two hundred and seventy gigabytes, which makes it a great test of Hadoop’s abilities with large files. 
+
+The data from the dataset is divided into a million separate files, one file per song. Within each file, the data is stored in the HDF5 format, a binary data format that is optimized for large tables. This data can be read by PyTables, but PyTables relies on the tables being resident on disk, which complicates Hadoop streaming programs. Because of this fact, and because uploading the entire dataset into Hadoop took 60 hours, it was decided to instead access the files over NFS and upload only the data we needed into Hadoop in a text format.
+
+The dataset contains both user- and automatically-generated metadata (genre, hotness, dance-ability) as well as data about each section, segment, tatum, bar, and beat of the song. An additional project added a manually-generated database about cover songs, consisting of a unique cover song identifier and the title and artist identifiers of each version of that song.
+
+This program is divided into separate shell scripts to run each individual Hadoop job. For the majority of the shell scripts, there is no post-processing and the data is just left in the Hadoop file system. For scripts that output data that a future job will rely on (e.g. the classifiers use lists of the top ten most popular terms that were previously generated), they do the necessary post-processing and keep the generated text files in the current directory of the local file system. There are also a few scripts to batch up a large number of jobs; all.sh runs all of the tasks while timing.sh runs a subset used for timing comparisons between clusters of different sizes.
+
+Speedup lessons:
+The most interesting lesson from this project was that using "hadoop fs -copyFromLocal" was not necessarily the fastest way to get data into the array when not all data is needed. In our case, the million song database contains a lot of information that could be further compressed; it contained several time sequences of data when our data processing tasks were only concerned with the mean and variances of these sequences. By computing these means and variances from the raw files and then only uploading them rather than the original files, a significant speedup was attained.
+
+For the million song database's data, directly uploading to the hadoop filesystem would have taken over 60 hours, while running a map-reduce job where the filenames were passed to the mapper, which then accessed the files over NFS, processed them, and uploaded them took under 7 hours for a 4-node cluster. The uncompressed data is 271GB, while the compressed data that was uploaded is only 3GB
 
 Numpy is significantly faster than trying to do math in Python. When trying to do any sort of math over a list, converting that list to a Numpy array, running a Numpy operation on the array, and converting the array back to a list is orders of magnitude faster than iterating over that list in Python. This was discovered early in the project, so there is no hard data for the amount of speedup gained by this, but it would be significant.
 
 Use global variables for constants. When building the Bayesian classifier, the original design was for the list of training artists to be re-loaded from disk at every iteration of the mapper. By moving this from the mapper to program start, the execution time of building the classifier dropped from 54 minutes to seven and a half.
 
-To determine whether an artist is in the test or training set, the classifiers look in a dictionary which has the training set artists as a key. Using the statement "dictionary.has_key(key)", which presumably hashes the key and sees if there is any data under that hash, is much faster than the statement "key in dictionary.keys()" which presumably grabs all of the keys from dictionary and then compares them individually to key. In retrospect this makes sense, but at the time that one line was responsible for quadrupling the running time of the classifier.
+To determine whether an artist is in the test or training set, the classifiers look in a dictionary which has the training set artists as a key. Using the statement "dictionary.has_key(key)", which presumably hashes the key and sees if there is any data under that hash, is much faster than the equivalent statement "key in dictionary.keys()" which presumably grabs all of the keys from dictionary and then compares them individually to key. In retrospect this makes sense, but at the time that one line was responsible for quadrupling the running time of the classifier.
 
-Data that is more complicated than a few values is passed between mappers and reducers using JSON objects. This makes programming much simpler, but is a very slow method; json.loads(object) takes a long time to output an object regardless of the size of it. Because of this, it's much faster to decode a single large object than several smaller objects. This fact was used to speed up the fisher classification. The first part of the classifier builder takes arrays from the mappers and combines it into single two-dimensional array. The cost of converting each json object to an array and combining these coupled with the large amount of time taken up by the actual classifier building work caused the reducer not to finish in ten minutes, causing a timeout. By using string manipulations to combine these json objects into a single object and import that instead, eight of the ten reducers was able to run in the allotted ten minutes. The ultimate solution for this was to increase the timeout.
+Data that is more complicated than a few values is passed between mappers and reducers using JSON objects. This makes programming much simpler, but is a very slow method; json.loads(object) has a long startup time for decoding each object. Because of this, it's much faster to decode a single large object than several smaller objects. This fact was used to speed up the fisher classification. The first part of the classifier builder takes arrays from the mappers and combines it into single two-dimensional array. The cost of converting each json object to an array and combining these coupled with the large amount of time taken up by the actual classifier building work caused the reducer not to finish in ten minutes, causing a timeout. By using string manipulations to combine these json objects into a single object and import that instead, eight of the ten reducers were able to run in the allotted ten minutes. The ultimate solution for the other two to be able to run was to increase the timeout, but the speed gain still holds.
 
 Annoyances:
-garbage collection failure
-danceability = 0 for all songs 
+Having not worked on projects with a large memory requirement in a garbage collected language before, I now see the main difference between these and C is that when the program has a memory leak, it is a lot harder to fix in Python. Objects created in the mapper and reducer functions tended to not be destroyed, leading to memory leaks. This would not be a big deal with a smaller data set, but when dealing with hundreds of gigabytes of data, this can quickly crash a cluster. The solution was to manually delete objects when done with them and run gc.collect() to manually run the garbage collector. 
+
+Rebooting the clusters when garbage collection failed or the cluster otherwise crashed often crashed Starcluster. Running the Starcluster reboot command a second time seemed to work.
+
+The danceability for all songs was 0 in the data set. This made comparing songs by danceability rather difficult.
+
+Individual songs were not tagged by genre; instead, artists were tagged. I got around this by tagging each song by an artist by that artist’s genre, but this is far from an ideal situation for artists whose songs span multiple genres. 
+
+Future work:
+This work barely scratches the surface of what is possible with the Million Song Dataset. The most obvious next step is to try additional classifiers for genre classification. In addition, there are a lot of other metadata to classify over, such as artist name. 
+
+During the middle of the project, a lyrics database was introduced. This will be able to yield all sorts of interesting data, as well as potentially improving the accuracy of our classifiers by a large margin.
+
+This project intentionally avoided trying to figure out machine learning methods for time-differing data; we took the mean and variance of pitch and loudness rather than trying to see how it changed over time. Figuring out how to incorporate this time data into classifiers would be an interesting challenge.
 
 total data size ~ 3GB
 
