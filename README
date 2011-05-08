@@ -48,6 +48,7 @@ Runs previously-built Bayes classifier
 Cover_song.sh
 Requires cover_song_prepare to be run first
 Page ranks most influential artists using cover song database
+This uses the same pagerank code from homework 4, but the process of turning the list of cover songs into a link map was my own idea. I take the cover songs, find the oldest song, and say the newer songs are a cover of that song. I then turn this into links from the newer songs’ artists to the cover song’s artist. The resulting link map can then be pageranked. Having completely made this up, I was pleasantly surprised when the results actually made sense; the top 10 list is artists that are thought to be very influential in music. The fact that this worked was one of the pleasant surprises of this project.
 
 Cover_song_prepare.sh
 Converts cover song database into a format that is easier to run map-reduce on.
